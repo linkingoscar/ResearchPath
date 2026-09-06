@@ -25,9 +25,18 @@ try {
     if ($LASTEXITCODE -ne 0) {
         throw "R testthat suite (excluding public-data-glmm) failed with exit code $LASTEXITCODE."
     }
-    & $rscript --vanilla $testEntry $root 'public-data-glmm'
-    if ($LASTEXITCODE -ne 0) {
-        throw "R testthat suite (public-data-glmm isolated) failed with exit code $LASTEXITCODE."
+    $accessViolationExitCode = -1073741819
+    $glmmExitCode = 0
+    for ($attempt = 1; $attempt -le 2; $attempt += 1) {
+        & $rscript --vanilla $testEntry $root 'public-data-glmm'
+        $glmmExitCode = $LASTEXITCODE
+        if ($glmmExitCode -ne $accessViolationExitCode -or $attempt -eq 2) {
+            break
+        }
+        Write-Warning 'The isolated GLMM R process hit Windows access violation 0xC0000005; retrying once in a fresh process.'
+    }
+    if ($glmmExitCode -ne 0) {
+        throw "R testthat suite (public-data-glmm isolated) failed with exit code $glmmExitCode."
     }
 }
 finally {
