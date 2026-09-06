@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { expect, test, type Page } from '@playwright/test'
 import { configureMethod, openDataWorkspace } from './session'
-import { installPageFailureMonitor } from './quality'
+import { expectPrdBreakpointUsability, installPageFailureMonitor } from './quality'
 
 async function importAndMeasure(page: Page) {
   await openDataWorkspace(page)
@@ -83,6 +83,11 @@ for (const procedure of ['描述统计', '相关分析', '分层线性回归']) 
     expect(workbook.cells.join('\n')).toContain(job.datasetId)
     expect(workbook.cells.join('\n')).toContain('自主性')
     expect(workbook.cells.some(value => /^-?\d+\.\d+$/.test(value))).toBeTruthy()
+    if (procedure === '描述统计') {
+      await page.getByRole('tab', { name: '输出', exact: true }).click()
+      await expect(page.getByRole('heading', { name: '输出', exact: true })).toBeVisible()
+      await expectPrdBreakpointUsability(page, page.getByRole('checkbox', { name: '选择最新结果用于批量导出' }))
+    }
     await failures.expectClean()
   })
 }

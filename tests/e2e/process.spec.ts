@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { openAdvancedProcessEditor, openDataWorkspace } from './session'
-import { expectNoHorizontalOverflow, expectNoSeriousAccessibilityViolations, installPageFailureMonitor } from './quality'
+import { expectNoHorizontalOverflow, expectNoSeriousAccessibilityViolations, expectPrdBreakpointUsability, installPageFailureMonitor } from './quality'
 
 test('@real-r @a11y supports PROCESS point assignment, safe undo, freezing and a real model run in glass themes', async ({ page }) => {
   test.setTimeout(150_000)
@@ -12,6 +12,8 @@ test('@real-r @a11y supports PROCESS point assignment, safe undo, freezing and a
   await expect(page.getByText('测量层已完成 · v1')).toBeVisible()
   await openAdvancedProcessEditor(page)
   await expect(page.getByText('草稿已保存', { exact: true })).toBeVisible()
+  await expectPrdBreakpointUsability(page, page.getByRole('searchbox', { name: '搜索变量' }))
+  await page.setViewportSize({ width: 1440, height: 1000 })
 
   // One keyboard-operable assignment path also creates valid control nodes.
   await page.getByRole('searchbox', { name: '搜索变量' }).fill('age')
