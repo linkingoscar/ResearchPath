@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { openAuthenticatedPage } from './session'
 import {
   expectNoHorizontalOverflow,
+  expectPrdBreakpointUsability,
   expectNoSeriousAccessibilityViolations,
   installPageFailureMonitor,
 } from './quality'
@@ -64,19 +65,10 @@ test('@smoke @a11y dense workspaces remain usable at PRD breakpoints', async ({ 
   await page.getByRole('button', { name: '一键导入经典问卷示例项目' }).click()
   await expect(page.getByRole('heading', { name: '当前数据' })).toBeVisible()
 
-  for (const width of [1024, 760, 420]) {
-    await page.setViewportSize({ width, height: 900 })
-    await page.getByRole('tab', { name: '数据', exact: true }).click()
-    await expect(page.getByRole('heading', { name: '当前数据' })).toBeVisible()
-    await expectNoHorizontalOverflow(page)
-    await page.getByRole('tab', { name: '分析', exact: true }).click()
-    await expect(page.getByRole('heading', { name: '分析方法', exact: true })).toBeVisible()
-    await expectNoHorizontalOverflow(page)
-    await page.getByRole('tab', { name: '输出', exact: true }).click()
-    await expect(page.getByRole('heading', { name: '输出', exact: true })).toBeVisible()
-    await expectNoHorizontalOverflow(page)
-  }
-
-  await expectNoSeriousAccessibilityViolations(page)
+  await expectPrdBreakpointUsability(page, page.getByRole('searchbox', { name: '查找案例' }))
+  await page.getByRole('tab', { name: '分析', exact: true }).click()
+  await expectPrdBreakpointUsability(page, page.getByRole('button', { name: '配置描述统计' }))
+  await page.getByRole('tab', { name: '输出', exact: true }).click()
+  await expectPrdBreakpointUsability(page, page.getByRole('searchbox', { name: '搜索输出' }))
   await failures.expectClean()
 })

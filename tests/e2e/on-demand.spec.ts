@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { configureMethod, openAdvancedSemEditor, openAnalysisLibrary, openDataWorkspace } from './session'
-import { expectNoHorizontalOverflow, expectNoSeriousAccessibilityViolations, installPageFailureMonitor } from './quality'
+import { expectNoHorizontalOverflow, expectNoSeriousAccessibilityViolations, expectPrdBreakpointUsability, installPageFailureMonitor } from './quality'
 
 async function startIndependent(page: Parameters<typeof openDataWorkspace>[0]) {
   await openDataWorkspace(page)
@@ -32,6 +32,8 @@ test('@real-r raw variables run without constructs and drafts survive navigation
   await page.reload()
   await configureMethod(page, '描述统计')
   await expect(page.getByRole('checkbox', { name: 'age', exact: true })).toBeChecked()
+  await expectPrdBreakpointUsability(page, page.getByRole('checkbox', { name: 'age', exact: true }))
+  await page.setViewportSize({ width: 1440, height: 1000 })
   let submitted = 0
   let releaseAcceptance: () => void = () => undefined
   let submittedToServer: () => void = () => undefined
@@ -69,6 +71,8 @@ test('@real-r @a11y SEM exposes complete measurement models and preserves edits 
   await expect(page.getByText('测量层已完成 · v1')).toBeVisible()
   await openAdvancedSemEditor(page)
   await expect(page.getByText('草稿已保存', { exact: true })).toBeVisible()
+  await expectPrdBreakpointUsability(page, page.getByRole('button', { name: '3 · 估计设置' }))
+  await page.setViewportSize({ width: 1440, height: 1000 })
   await page.getByRole('button', { name: '3 · 估计设置' }).click()
   await page.getByRole('button', { name: 'lavaan (SEM 结构方程)', exact: true }).click()
   const indicators = page.locator('.react-flow__node[data-id^="indicator:"]')

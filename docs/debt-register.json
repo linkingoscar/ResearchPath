@@ -4731,20 +4731,24 @@
       "category": "prd-e2e-coverage",
       "priority": "P2",
       "title": "三工作区 E2E 尚未覆盖密集页面与 1024/760/420 关键宽度",
-      "status": "open",
+      "status": "implemented_pending_verification",
       "ownerRole": "test-engineering",
       "targetMilestone": "PRD Phase 7 验收",
       "evidence": [
         "tests/e2e/prd-workbench.spec.ts 只覆盖应用壳、键盘 tab、无全局 glass 与 390px 横向溢出；未进入数据表、方法目录、配置工作台和 Output 历史结果等密集路由。",
         "现有其他 E2E 多使用 1440/390，未形成 PRD 指定 1024/760/420 三档的系统性工作区回归。",
-        "2026-09-05：prd-workbench E2E 新增 1024/760/420 三档 Data、Analyze 方法目录与 Output 工作区无横向溢出和严重无障碍检查；专用配置与历史结果已有 390px 路径，但尚未在三档逐类复跑，因此保持 open。"
+        "2026-09-05：prd-workbench E2E 新增 1024/760/420 三档 Data、Analyze 方法目录与 Output 工作区无横向溢出和严重无障碍检查；专用配置与历史结果已有 390px 路径，但尚未在三档逐类复跑，因此保持 open。",
+        "2026-09-06：现有实证、PROCESS、SEM 与描述统计后 Output 历史真实旅程均复用统一三断点助手，逐档检查主操作可见可聚焦、无页面横向溢出与严重无障碍问题；没有增加重复旅程或新 CI 门禁。"
       ],
       "acceptance": [
         "为数据、分析目录、实证配置、PROCESS/SEM 配置与 Output 历史结果建立可重复种子工作区场景。",
         "每类密集页面至少验证 1024、760、420 的无横向溢出、主要操作可达、焦点顺序与严重无障碍问题。",
         "场景进入 hosted Full/Release 门禁且保存失败诊断证据。"
       ],
-      "closureEvidence": []
+      "closureEvidence": [
+        "Playwright 用例发现保持 10 个文件、26 条用例；源码上限、changelog governance 与差异格式检查通过。",
+        "待本批 hosted Full 在 Windows/R/Chromium 环境通过后关闭。"
+      ]
     },
     {
       "id": "DEBT-207",

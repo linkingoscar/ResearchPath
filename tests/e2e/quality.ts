@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright'
-import { expect, type Page } from '@playwright/test'
+import { expect, type Locator, type Page } from '@playwright/test'
 
 const RESIZE_OBSERVER_LOOP_ERROR = 'ResizeObserver loop completed with undelivered notifications.'
 const RESIZE_OBSERVER_COUNTER = '__researchPathClassifiedResizeObserverLoopErrors'
@@ -170,4 +170,15 @@ export async function expectNoHorizontalOverflow(page: Page) {
       })),
   }))
   expect(overflowAudit.hasOverflow, JSON.stringify(overflowAudit)).toBe(false)
+}
+
+export async function expectPrdBreakpointUsability(page: Page, primaryControl: Locator) {
+  for (const width of [1024, 760, 420]) {
+    await page.setViewportSize({ width, height: 900 })
+    await expect(primaryControl).toBeVisible()
+    await primaryControl.focus()
+    await expect(primaryControl).toBeFocused()
+    await expectNoHorizontalOverflow(page)
+    await expectNoSeriousAccessibilityViolations(page)
+  }
 }
