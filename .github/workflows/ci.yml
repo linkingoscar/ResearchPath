@@ -21,12 +21,14 @@ jobs:
     env:
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
       PYTHONUTF8: "1"
+      RESEARCHPATH_CI_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before || 'missing-ci-base' }}
 
     steps:
       - name: Check out source
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up Python 3.10
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -41,21 +43,31 @@ jobs:
           node-version: "24"
           cache: npm
 
-      - name: Prepare Quick dependencies
+      - name: Resolve test impact
+        id: impact
         if: github.event_name != 'workflow_dispatch'
         shell: pwsh
         run: |
-          python -m venv .venv
-          ./.venv/Scripts/python.exe -m pip install --require-hashes -r apps/api/requirements.lock
-          npm ci
+          $impactJson = & python scripts/resolve-test-impact.py --root . --base-ref $env:RESEARCHPATH_CI_BASE_REF --diff-mode direct
+          if ($LASTEXITCODE -ne 0) { throw 'Test impact resolution failed.' }
+          $impact = $impactJson | ConvertFrom-Json
+          Write-Host ($impact | ConvertTo-Json -Depth 5)
+          "runtime-required=$($impact.requiresRuntime.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          "mode=$($impact.mode)" >> $env:GITHUB_OUTPUT
 
-      - name: Run Quick checks
-        if: github.event_name != 'workflow_dispatch'
+      - name: Prepare lightweight dependencies
+        if: github.event_name != 'workflow_dispatch' && steps.impact.outputs.runtime-required == 'false'
         shell: pwsh
-        run: ./scripts/harness.ps1 -Mode Quick
+        run: |
+          python -m venv .venv
+          if ($LASTEXITCODE -ne 0) { throw 'Python environment creation failed.' }
+          ./.venv/Scripts/python.exe -m pip install --require-hashes -r apps/api/requirements.lock
+          if ($LASTEXITCODE -ne 0) { throw 'Python dependency installation failed.' }
+          npm ci
+          if ($LASTEXITCODE -ne 0) { throw 'Node dependency installation failed.' }
 
       - name: Restore R runtime and library
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' || steps.impact.outputs.runtime-required == 'true'
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: |
@@ -65,16 +77,23 @@ jobs:
           key: windows-r-4.6.1-${{ hashFiles('renv.lock') }}
 
       - name: Restore Rtools toolchain
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' || steps.impact.outputs.runtime-required == 'true'
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: C:\rtools45
           key: windows-rtools45-${{ hashFiles('.github/rtools45-cache-key.txt') }}
 
-      - name: Prepare Full dependencies
-        if: github.event_name == 'workflow_dispatch'
+      - name: Prepare runtime dependencies
+        if: github.event_name == 'workflow_dispatch' || steps.impact.outputs.runtime-required == 'true'
         shell: pwsh
         run: ./scripts/setup.ps1
+
+      - name: Run selected checks
+        if: github.event_name != 'workflow_dispatch'
+        shell: pwsh
+        env:
+          RESEARCHPATH_CI_MODE: ${{ steps.impact.outputs.mode }}
+        run: ./scripts/harness.ps1 -Mode $env:RESEARCHPATH_CI_MODE -BaseRef $env:RESEARCHPATH_CI_BASE_REF -DiffMode direct
 
       - name: Run Full checks
         if: github.event_name == 'workflow_dispatch'

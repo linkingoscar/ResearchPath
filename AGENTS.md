@@ -30,8 +30,8 @@ Use the smallest validation level that matches the change.
 
 - Read `docs/04-工程开发与验证.md` before repository-wide cleanup, performance work, security hardening or release preparation.
 - Small changes use `scripts/harness.ps1 -Mode Quick`.
-- Medium, single-feature changes use `scripts/harness.ps1 -Mode Targeted` and only the affected test lanes.
-- Cross-domain changes, core statistical/contract/security/runtime changes and release candidates use `scripts/harness.ps1 -Mode Full`.
+- Medium, single-feature changes use `scripts/harness.ps1 -Mode Targeted`: Quick runs once, then only explicitly selected module tests run.
+- Cross-domain refactoring, statistical/contract foundations, shared security/runtime foundations and release candidates use `scripts/harness.ps1 -Mode Full` directly; do not run Quick separately first.
 - Never raise coverage, type, bundle, performance or statistical tolerances merely to make a failing gate pass.
 - Validate persisted paths, object identity and resource budgets before filesystem or database side effects.
 - Stop only the object the user named: scans, processes, Codex pages and task archives are distinct lifecycle objects.
@@ -41,4 +41,5 @@ Use the smallest validation level that matches the change.
 - Public documentation describes the product as it exists now. Do not add PR numbers, internal ticket IDs, dated implementation diaries or migration narratives.
 - Record durable behavior, supported boundaries and reproducible verification commands next to the relevant product, method, architecture or operations documentation.
 - Keep temporary plans, logs, screenshots and review notes outside the repository.
+- User-requested durable engineering change records and debt tracking belong in `docs/engineering/`; keep them separate from public product documentation and raw runtime logs.
 - Cross-language contract changes must remain synchronized across JSON Schema, Python, TypeScript, R input and their tests.

@@ -43,6 +43,11 @@ $jobs = foreach ($taskName in $taskNames) {
                     Assert-ExitCode 'Python lint'
                     & (Join-Path $Root '.venv\Scripts\python.exe') (Join-Path $Scripts 'check-python-types.py')
                     Assert-ExitCode 'Python type baseline'
+                    $harnessTestRoot = Join-Path ([IO.Path]::GetTempPath()) ('researchpath-harness-' + [guid]::NewGuid().ToString('N'))
+                    & (Join-Path $Root '.venv\Scripts\python.exe') -m pytest `
+                        scripts/tests/test_resolve_test_impact.py scripts/tests/test_ci_workflow.py scripts/tests/test_r_build_path.py `
+                        --basetemp $harnessTestRoot
+                    Assert-ExitCode 'Validation harness regression tests'
                 }
                 'web-and-contracts' {
                     & npm run lint:web

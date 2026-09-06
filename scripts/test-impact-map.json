@@ -1,57 +1,362 @@
 {
-  "schemaVersion": "1.0.0",
-  "defaultEscalation": "Full",
-  "rules": [
+  "schemaVersion": "2.0.0",
+  "quickPatterns": [
+    "*.md",
+    "apps/web/src/*.css",
+    "assets/**"
+  ],
+  "fullPatterns": [
+    "scripts/**",
+    ".github/**",
+    "docs/baselines/**",
+    "specs/**",
+    "package*.json",
+    "pyproject.toml",
+    "pyrightconfig.json",
+    "project.manifest.json",
+    "renv.lock",
+    "apps/api/requirements*",
+    "apps/api/app/*contracts*.py",
+    "apps/api/app/contracts/**",
+    "apps/api/app/api/dto/**",
+    "apps/api/app/api/schemas.py",
+    "apps/api/app/api/responses.py",
+    "apps/api/app/main.py",
+    "apps/api/app/settings.py",
+    "apps/api/app/api/session*",
+    "apps/api/app/services/*jobs*",
+    "apps/api/app/services/r_*",
+    "apps/api/app/services/*process*",
+    "apps/api/app/services/*identity*",
+    "apps/api/app/services/*security*",
+    "apps/api/app/services/repository_*",
+    "apps/api/app/services/dataset_repository.py",
+    "apps/api/app/services/database_migrations.py",
+    "apps/api/app/services/empirical_analysis.py",
+    "apps/api/app/services/empirical_data_prep.py",
+    "apps/api/app/services/advanced_runner.py",
+    "apps/api/app/services/advanced_analysis.py",
+    "apps/web/src/types/**",
+    "apps/web/src/api/client.ts",
+    "apps/web/src/main.tsx",
+    "apps/web/src/hooks/workspace*",
+    "apps/web/src/hooks/useWorkspaceState.ts",
+    "apps/web/src/methods/**",
+    "engine/R/run_*.R",
+    "engine/R/worker.R",
+    "engine/R/lib/bootstrap.R",
+    "engine/R/lib/centering_utils.R",
+    "engine/R/lib/inference_covariance.R",
+    "engine/R/lib/analysis_regression.R",
+    "engine/R/lib/output_contract.R",
+    "engine/R/lib/parallel.R",
+    "engine/R/lib/resource_budget.R",
+    "engine/R/lib/runtime.R",
+    "engine/R/lib/seed_utils.R",
+    "engine/R/lib/sample_adequacy.R",
+    "engine/R/lib/missing_data.R",
+    "engine/R/lib/time_series_utils.R",
+    "engine/R/tests/testthat/helper-*",
+    "engine/R/tests/testthat.R",
+    "playwright.config.ts",
+    "apps/api/tests/conftest.py",
+    "tests/e2e/global-setup.ts",
+    "apps/web/src/App.tsx",
+    "apps/web/src/AppWorkspaceTabs.tsx"
+  ],
+  "modules": [
     {
-      "id": "documentation-only",
-      "patterns": ["docs/**", "*.md"],
-      "risk": "A",
-      "lanes": ["docs-only"]
-    },
-    {
-      "id": "frontend",
-      "patterns": ["apps/web/src/**"],
-      "risk": "B",
-      "lanes": ["web-unit", "e2e-smoke"]
-    },
-    {
-      "id": "browser-e2e",
-      "patterns": ["tests/e2e/**", "playwright.config.ts"],
-      "risk": "B",
-      "lanes": ["e2e-smoke"]
-    },
-    {
-      "id": "cross-language-contract",
-      "patterns": ["specs/**", "apps/web/src/types/**", "apps/web/src/api/**"],
-      "risk": "C",
-      "lanes": ["contracts", "api-no-coverage", "web-unit"]
-    },
-    {
-      "id": "api",
-      "patterns": ["apps/api/app/**", "apps/api/tests/**"],
-      "risk": "B",
-      "lanes": ["api-no-coverage"]
-    },
-    {
-      "id": "statistical-engine",
-      "patterns": ["engine/R/**", "renv.lock"],
-      "risk": "C",
-      "lanes": ["r-statistical", "r-goldens", "api-no-coverage"]
-    },
-    {
-      "id": "release-or-harness-infrastructure",
+      "id": "data",
       "patterns": [
-        "scripts/**",
-        ".github/**",
-        "package.json",
-        "package-lock.json",
-        "requirements*.txt",
-        "pyproject.toml",
-        "project.manifest.json"
+        "apps/api/app/services/dataset_*",
+        "apps/api/app/services/data_quality*",
+        "apps/api/app/api/routes/datasets.py",
+        "apps/api/tests/test_dataset*",
+        "apps/api/tests/test_data_quality*",
+        "apps/web/src/components/Data*",
+        "apps/web/src/components/Variable*",
+        "apps/web/src/components/data/**",
+        "apps/web/src/api/datasets.ts"
       ],
-      "risk": "D",
-      "lanes": [],
-      "escalation": "Full"
+      "tests": {
+        "api": [
+          "apps/api/tests/test_dataset*.py",
+          "apps/api/tests/test_data_quality.py"
+        ],
+        "web": [
+          "apps/web/src/components/Data*.test.*",
+          "apps/web/src/components/Variable*.test.*",
+          "apps/web/src/components/data/*.test.*"
+        ],
+        "e2e": [
+          "tests/e2e/workspace.spec.ts",
+          "tests/e2e/cold-start.spec.ts"
+        ]
+      }
+    },
+    {
+      "id": "measurement",
+      "patterns": [
+        "apps/api/app/services/measurement*",
+        "apps/api/tests/test_measurement*",
+        "apps/api/tests/test_scoring_reliability.py",
+        "apps/web/src/components/Measurement*",
+        "apps/web/src/components/measurement*",
+        "engine/R/lib/cfa*",
+        "engine/R/lib/efa*",
+        "engine/R/lib/validity.R",
+        "engine/R/lib/invariance.R",
+        "engine/R/lib/esem_bifactor.R"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_measurement*.py",
+          "apps/api/tests/test_scoring_reliability.py",
+          "apps/api/tests/test_esem_bifactor_irt.py"
+        ],
+        "web": [
+          "apps/web/src/components/Measurement*.test.*"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-*efa*.R",
+          "engine/R/tests/testthat/test-*cfa*.R",
+          "engine/R/tests/testthat/test-invariance-boundary.R",
+          "engine/R/tests/testthat/test-irt-goldens.R",
+          "engine/R/tests/testthat/test-measurement-fallbacks.R",
+          "engine/R/tests/testthat/test-public-data-measurement.R"
+        ],
+        "e2e": [
+          "tests/e2e/workspace.spec.ts"
+        ]
+      }
+    },
+    {
+      "id": "model",
+      "patterns": [
+        "apps/api/app/services/model_*",
+        "apps/api/app/services/sem_compiler.py",
+        "apps/api/app/api/routes/models.py",
+        "apps/api/tests/test_model*",
+        "apps/api/tests/test_sem*",
+        "apps/web/src/components/model-builder/**",
+        "apps/web/src/components/ModelBuilder*",
+        "engine/R/lib/sem_analysis.R",
+        "engine/R/lib/sem_failure.R"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_model*.py",
+          "apps/api/tests/test_sem*.py",
+          "apps/api/tests/test_incomplete_model_drafts.py"
+        ],
+        "web": [
+          "apps/web/src/components/model-builder/*.test.*"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-public-data-sem.R"
+        ],
+        "e2e": [
+          "tests/e2e/process.spec.ts",
+          "tests/e2e/ui-process-editing.spec.ts"
+        ]
+      }
+    },
+    {
+      "id": "longitudinal",
+      "patterns": [
+        "engine/R/lib/longitudinal*",
+        "apps/api/tests/test_longitudinal*",
+        "apps/web/src/components/empirical/Longitudinal*"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_longitudinal*.py"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-longitudinal-goldens.R",
+          "engine/R/tests/testthat/test-lcm-sr-goldens.R"
+        ],
+        "web": [
+          "apps/web/src/components/empirical/Longitudinal*.test.*"
+        ]
+      }
+    },
+    {
+      "id": "diary",
+      "patterns": [
+        "engine/R/lib/diary_*",
+        "apps/api/tests/test_diary*",
+        "apps/web/src/components/empirical/Diary*"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_diary*.py"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-public-data-diary.R",
+          "engine/R/tests/testthat/test-public-data-glmm.R"
+        ],
+        "web": [
+          "apps/web/src/components/empirical/Diary*.test.*"
+        ]
+      }
+    },
+    {
+      "id": "power",
+      "patterns": [
+        "engine/R/lib/power_*",
+        "apps/api/tests/test_*power*",
+        "apps/web/src/components/advanced/Power*",
+        "apps/web/src/components/empirical/Power*"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_*power*.py"
+        ],
+        "web": [
+          "apps/web/src/components/empirical/Power*.test.*",
+          "apps/web/src/components/advanced/Power*.test.*"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-power-goldens.R",
+          "engine/R/tests/testthat/test-mc-power-goldens.R"
+        ]
+      }
+    },
+    {
+      "id": "experiment",
+      "patterns": [
+        "engine/R/lib/experiment*",
+        "engine/R/lib/factorial_ancova.R",
+        "apps/api/tests/test_*experiment*",
+        "apps/api/tests/test_factorial_ancova.py",
+        "apps/web/src/components/advanced/Experiment*"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_*experiment*.py",
+          "apps/api/tests/test_factorial_ancova.py"
+        ],
+        "web": [
+          "apps/web/src/components/advanced/Experiment*.test.*"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-experimental-goldens.R"
+        ]
+      }
+    },
+    {
+      "id": "imputation",
+      "patterns": [
+        "engine/R/lib/imputation_runner.R",
+        "engine/R/lib/mi_rubin.R",
+        "apps/api/app/services/imputation_*",
+        "apps/api/tests/test_*imputation*",
+        "apps/api/tests/test_mice_typed.py",
+        "apps/web/src/components/advanced/Imputation*",
+        "apps/web/src/components/context/Imputation*"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_*imputation*.py",
+          "apps/api/tests/test_mice_typed.py"
+        ],
+        "web": [
+          "apps/web/src/components/advanced/Imputation*.test.*",
+          "apps/web/src/components/context/Imputation*.test.*"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-mi-goldens.R"
+        ]
+      }
+    },
+    {
+      "id": "context",
+      "patterns": [
+        "apps/api/app/services/study_*",
+        "apps/api/app/services/analysis_context*",
+        "apps/api/app/services/analysis_draft*",
+        "apps/api/app/services/workflow*",
+        "apps/api/tests/test_study*",
+        "apps/api/tests/test_analysis_context*",
+        "apps/api/tests/test_workflow*",
+        "apps/web/src/components/context/**"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_study*.py",
+          "apps/api/tests/test_analysis_context*.py",
+          "apps/api/tests/test_workflow*.py"
+        ],
+        "web": [
+          "apps/web/src/components/context/*.test.*"
+        ],
+        "e2e": [
+          "tests/e2e/method-navigation.spec.ts"
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "patterns": [
+        "apps/api/app/services/analysis_index*",
+        "apps/api/app/services/*export*",
+        "apps/api/app/services/*report*",
+        "apps/api/app/services/academic_interpreter.py",
+        "apps/api/tests/test_analysis_index.py",
+        "apps/api/tests/test_academic_interpreter.py",
+        "apps/api/tests/test_report*",
+        "apps/web/src/components/Output*",
+        "apps/web/src/components/analyses/**",
+        "apps/api/tests/test_empirical_*export*"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_analysis_index.py",
+          "apps/api/tests/test_academic_interpreter.py",
+          "apps/api/tests/test_report*.py",
+          "apps/api/tests/test_empirical_*export*.py"
+        ],
+        "web": [
+          "apps/web/src/components/Output*.test.*",
+          "apps/web/src/components/analyses/*.test.*"
+        ],
+        "e2e": [
+          "tests/e2e/prd-workbench.spec.ts"
+        ]
+      }
+    },
+    {
+      "id": "empirical",
+      "patterns": [
+        "apps/api/app/services/empirical_*",
+        "apps/api/tests/test_empirical*",
+        "apps/api/tests/test_regression*",
+        "apps/api/tests/test_response_surface.py",
+        "apps/web/src/components/empirical/**",
+        "apps/web/src/components/Empirical*",
+        "engine/R/lib/hierarchical_regression.R",
+        "engine/R/lib/regression_reporting.R",
+        "engine/R/lib/relative_importance.R",
+        "engine/R/lib/response_surface.R"
+      ],
+      "tests": {
+        "api": [
+          "apps/api/tests/test_empirical*.py",
+          "apps/api/tests/test_regression*.py",
+          "apps/api/tests/test_response_surface.py"
+        ],
+        "web": [
+          "apps/web/src/components/empirical/*.test.*",
+          "apps/web/src/components/Empirical*.test.*"
+        ],
+        "r": [
+          "engine/R/tests/testthat/test-public-data-crosssectional.R"
+        ],
+        "e2e": [
+          "tests/e2e/on-demand.spec.ts"
+        ]
+      }
     }
   ]
 }

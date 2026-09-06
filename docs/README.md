@@ -18,3 +18,5 @@
 | 11 | [设计与工程方法](11-设计与工程方法.md) | 从统计、契约、异步、安全和 UX 风险中提炼的实现原则 |
 
 机器可读范围见 [project.manifest.json](../project.manifest.json)。覆盖率、源码行数和样式预算等活动基线位于 `docs/baselines/`。
+
+维护者要求保留的内部工程记录独立放在 [修改日志](engineering/CHANGELOG.md) 和 [债务登记](engineering/DEBT.md)，不作为产品功能或统计资格声明。

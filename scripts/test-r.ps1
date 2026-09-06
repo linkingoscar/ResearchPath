@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param()
+param([string[]]$TestFile = @())
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
@@ -21,10 +21,25 @@ try {
     # lme4's compiled Windows path can crash after unrelated testthat files
     # have loaded native state. Keep the GLMM oracle in its own R process so
     # the test remains enforced while avoiding cross-file native contamination.
-    & $rscript --vanilla $testEntry $root 'public-data-glmm' 'invert'
-    if ($LASTEXITCODE -ne 0) {
-        throw "R testthat suite (excluding public-data-glmm) failed with exit code $LASTEXITCODE."
+    $selectedNames = @($TestFile | ForEach-Object {
+        $path = [IO.Path]::GetFullPath($_, $root)
+        $testRoot = [IO.Path]::GetFullPath((Join-Path $root 'engine/R/tests/testthat')) + [IO.Path]::DirectorySeparatorChar
+        if (-not $path.StartsWith($testRoot, [StringComparison]::OrdinalIgnoreCase) -or
+            [IO.Path]::GetFileName($path) -notmatch '^test-.*\.R$' -or
+            -not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Invalid R test selector: $_" }
+        [IO.Path]::GetFileNameWithoutExtension($path).Substring(5)
+    })
+    $regularNames = @($selectedNames | Where-Object { $_ -ne 'public-data-glmm' })
+    if ($TestFile.Count -eq 0) {
+        & $rscript --vanilla $testEntry $root 'public-data-glmm' 'invert'
+        if ($LASTEXITCODE -ne 0) { throw "R testthat suite failed with exit code $LASTEXITCODE." }
     }
+    elseif ($regularNames.Count) {
+        $filter = '^(' + (($regularNames | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')$'
+        & $rscript --vanilla $testEntry $root $filter
+        if ($LASTEXITCODE -ne 0) { throw "Selected R tests failed with exit code $LASTEXITCODE." }
+    }
+    if ($TestFile.Count -gt 0 -and 'public-data-glmm' -notin $selectedNames) { return }
     $accessViolationExitCode = -1073741819
     $glmmExitCode = 0
     for ($attempt = 1; $attempt -le 2; $attempt += 1) {

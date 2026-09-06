@@ -1,25 +1,36 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)][string[]]$Lane,
-    [ValidateRange(1, 16)][int]$PytestWorkers = 4
+    [string[]]$ApiTest = @(),
+    [string[]]$WebTest = @(),
+    [string[]]$RTest = @(),
+    [string[]]$E2ETest = @()
 )
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $python = Join-Path $root '.venv\Scripts\python.exe'
-$knownLanes = @(
-    'api-no-coverage',
-    'contracts',
-    'docs-only',
-    'e2e-smoke',
-    'r-goldens',
-    'r-statistical',
-    'web-unit'
-)
-$selected = @($Lane | Sort-Object -Unique)
-$unknown = @($selected | Where-Object { $_ -notin $knownLanes })
-if ($unknown.Count -gt 0) {
-    throw "Unknown targeted test lane(s): $($unknown -join ', ')"
+
+function Resolve-TestFiles {
+    param([string[]]$Paths, [string]$Directory, [string]$Pattern)
+    $allowedRoot = [IO.Path]::GetFullPath((Join-Path $root $Directory)) + [IO.Path]::DirectorySeparatorChar
+    foreach ($path in ($Paths | Sort-Object -Unique)) {
+        $absolute = [IO.Path]::GetFullPath($path, $root)
+        if (-not $absolute.StartsWith($allowedRoot, [StringComparison]::OrdinalIgnoreCase) -or
+            [IO.Path]::GetFileName($absolute) -notmatch $Pattern -or
+            -not (Test-Path -LiteralPath $absolute -PathType Leaf)) {
+            throw "Invalid targeted test file: $path"
+        }
+        $absolute
+    }
+}
+
+# Validate every selector before invoking any test runner; empty selections never mean "all".
+$apiFiles = @(Resolve-TestFiles $ApiTest 'apps/api/tests' '^test_.*\.py$')
+$webFiles = @(Resolve-TestFiles $WebTest 'apps/web/src' '\.test\.tsx?$')
+$rFiles = @(Resolve-TestFiles $RTest 'engine/R/tests/testthat' '^test-.*\.R$')
+$e2eFiles = @(Resolve-TestFiles $E2ETest 'tests/e2e' '\.spec\.ts$')
+if ($apiFiles.Count + $webFiles.Count + $rFiles.Count + $e2eFiles.Count -eq 0) {
+    throw 'Targeted requires an explicit, non-empty module test selection.'
 }
 
 function Assert-LastExitCode {
@@ -29,81 +40,49 @@ function Assert-LastExitCode {
 
 Push-Location $root
 try {
-    Write-Host "Targeted lanes: $($selected -join ', ')" -ForegroundColor Cyan
-
-    if ('contracts' -in $selected) {
-        & (Join-Path $PSScriptRoot 'generate-contracts.ps1') -Check
-        Assert-LastExitCode 'Contract generation check'
-    }
-
-    if ('api-no-coverage' -in $selected) {
-        Push-Location (Join-Path $root 'apps\api')
+    if ($apiFiles.Count) {
         $previousLocale = $env:LC_ALL
         try {
             $env:LC_ALL = 'English_United States.utf8'
-            & $python -m pytest -m 'not serial' -n $PytestWorkers --dist=worksteal --max-worker-restart=0
-            Assert-LastExitCode 'Targeted parallel API tests'
-            & $python -m pytest -m serial -n 0
-            Assert-LastExitCode 'Targeted serial API tests'
+            # Run the selected files once. Serial execution also respects their serial markers.
+            & $python -m pytest -c (Join-Path $root 'apps/api/pytest.ini') @apiFiles -n 0
+            Assert-LastExitCode 'Selected API tests'
         }
-        finally {
-            $env:LC_ALL = $previousLocale
-            Pop-Location
-        }
+        finally { $env:LC_ALL = $previousLocale }
     }
-
-    if (('r-statistical' -in $selected) -or ('r-goldens' -in $selected)) {
-        $previousRLibrary = $env:R_LIBS_USER
-        $previousLocale = $env:LC_ALL
+    if ($rFiles.Count) {
+        & (Join-Path $PSScriptRoot 'test-r.ps1') -TestFile $rFiles
+        Assert-LastExitCode 'Selected R tests'
+    }
+    if ($webFiles.Count) {
+        & npm run test:web -- @webFiles
+        Assert-LastExitCode 'Selected Web tests'
+    }
+    if ($e2eFiles.Count) {
+        # Playwright also starts the production preview API.
+        & npm run build:web
+        Assert-LastExitCode 'Browser production build'
+        $portNames = @('RESEARCHPATH_E2E_API_PORT', 'RESEARCHPATH_E2E_WEB_PORT', 'RESEARCHPATH_E2E_PREVIEW_API_PORT')
+        $previousPorts = @{}
         try {
-            $env:R_LIBS_USER = Join-Path $root '.runtime\R-library'
-            $env:LC_ALL = 'English_United States.utf8'
-            & (Join-Path $root '.runtime\R\bin\Rscript.exe') --vanilla (Join-Path $PSScriptRoot 'check-r-lock.R') $root
-            Assert-LastExitCode 'R lock verification'
-            if ('r-goldens' -in $selected) {
-                & $python (Join-Path $PSScriptRoot 'check-r-numeric-baselines.py')
-                Assert-LastExitCode 'R numeric baseline verification'
+            foreach ($name in $portNames) {
+                $previousPorts[$name] = [Environment]::GetEnvironmentVariable($name)
+                $listener = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, 0)
+                $listener.Start()
+                $port = $listener.LocalEndpoint.Port
+                $listener.Stop()
+                [Environment]::SetEnvironmentVariable($name, [string]$port)
             }
-            & (Join-Path $PSScriptRoot 'test-r.ps1')
-            Assert-LastExitCode 'R statistical tests'
+            $selectors = @($e2eFiles | ForEach-Object { $_.Replace('\', '/') })
+            & npm run test:e2e -- @selectors
+            Assert-LastExitCode 'Selected browser tests'
         }
         finally {
-            $env:R_LIBS_USER = $previousRLibrary
-            $env:LC_ALL = $previousLocale
-        }
-    }
-
-    if ('web-unit' -in $selected) {
-        & npm run test:web
-        Assert-LastExitCode 'Web tests'
-    }
-
-    if ('e2e-smoke' -in $selected) {
-        $apiListener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
-        $apiListener.Start()
-        $e2eApiPort = $apiListener.LocalEndpoint.Port
-        $apiListener.Stop()
-        $webListener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
-        $webListener.Start()
-        $e2eWebPort = $webListener.LocalEndpoint.Port
-        $webListener.Stop()
-
-        $previousApiPort = $env:RESEARCHPATH_E2E_API_PORT
-        $previousWebPort = $env:RESEARCHPATH_E2E_WEB_PORT
-        try {
-            $env:RESEARCHPATH_E2E_API_PORT = [string]$e2eApiPort
-            $env:RESEARCHPATH_E2E_WEB_PORT = [string]$e2eWebPort
-            & npm run test:e2e -- --grep '@smoke'
-            Assert-LastExitCode 'Browser smoke tests'
-        }
-        finally {
-            $env:RESEARCHPATH_E2E_API_PORT = $previousApiPort
-            $env:RESEARCHPATH_E2E_WEB_PORT = $previousWebPort
+            foreach ($name in $previousPorts.Keys) {
+                [Environment]::SetEnvironmentVariable($name, $previousPorts[$name])
+            }
         }
     }
 }
-finally {
-    Pop-Location
-}
-
-Write-Host 'Targeted test lanes passed.' -ForegroundColor Green
+finally { Pop-Location }
+Write-Host 'Selected module tests passed.' -ForegroundColor Green

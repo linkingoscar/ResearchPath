@@ -74,7 +74,7 @@ Output 使用服务端 `AnalysisIndex` 保存 AnalysisDocument、运行引用、
 开发模式使用 Vite `127.0.0.1:5173` 和 FastAPI `127.0.0.1:9999`，会保留终端以显示生命周期；它与面向日常使用的桌面轻应用是两条独立入口。
 
 - Quick：架构、lint、类型和契约漂移；
-- Targeted：根据变更文件选择定向 API/R/Web/E2E，未知或高风险路径自动升级；
+- Targeted：包含一次 Quick，再按明确文件清单运行相关模块的 API/R/Web/E2E；未知范围、跨域或根基改动直接升级 Full；
 - Full：用于跨领域大改动或发布候选，覆盖 Python、R `testthat`、Web、完整 E2E、构建和 bundle。
 
 详细规则见 [工程开发与验证](docs/04-工程开发与验证.md)。

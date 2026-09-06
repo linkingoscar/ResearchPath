@@ -124,6 +124,8 @@ $rLockPathForR = $rLockPath.Replace('\', '/')
 if ($LASTEXITCODE -ne 0) { throw 'qs2 dependency restore verification failed.' }
 $qs2Ready = & $rscript --vanilla -e "if (requireNamespace('qs2', quietly=TRUE) && identical(as.character(packageVersion('qs2')), '$qs2Version')) cat('ready')"
 if ($qs2Ready -ne 'ready') {
+    & $rscript --vanilla (Join-Path $PSScriptRoot 'check-r-build-path.R')
+    if ($LASTEXITCODE -ne 0) { throw 'qs2 source build requires an ASCII physical runtime path.' }
     $qs2Archive = Join-Path $runtime "qs2_$qs2Version.tar.gz"
     $qs2Uri = "https://cloud.r-project.org/src/contrib/Archive/qs2/qs2_$qs2Version.tar.gz"
     Invoke-WebRequest -Uri $qs2Uri -OutFile $qs2Archive
@@ -157,6 +159,8 @@ $glmmTmbAbiProbe = Join-Path $root 'scripts\check-glmmtmb-abi.R'
 & $rscript --vanilla $glmmTmbAbiProbe
 if ($LASTEXITCODE -ne 0) {
     $glmmTmbArchive = Join-Path $runtime "glmmTMB_$glmmTmbVersion.tar.gz"
+    & $rscript --vanilla (Join-Path $PSScriptRoot 'check-r-build-path.R')
+    if ($LASTEXITCODE -ne 0) { throw 'glmmTMB source build requires an ASCII physical runtime path.' }
     $glmmTmbUris = @(
         "https://cloud.r-project.org/src/contrib/glmmTMB_$glmmTmbVersion.tar.gz",
         "https://cloud.r-project.org/src/contrib/Archive/glmmTMB/glmmTMB_$glmmTmbVersion.tar.gz"

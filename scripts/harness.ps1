@@ -5,6 +5,8 @@ param(
     [ValidateRange(1, 16)]
     [int]$PytestWorkers = 4,
     [string]$BaseRef = 'HEAD~1',
+    [ValidateSet('merge-base', 'direct')]
+    [string]$DiffMode = 'merge-base',
     [string[]]$ChangedFile = @()
 )
 
@@ -46,11 +48,11 @@ try {
             Invoke-QuickHarness
         }
         'Targeted' {
-            Invoke-QuickHarness
             $impactArguments = @(
                 (Join-Path $PSScriptRoot 'resolve-test-impact.py'),
                 '--root', $root,
-                '--base-ref', $BaseRef
+                '--base-ref', $BaseRef,
+                '--diff-mode', $DiffMode
             )
             foreach ($path in $ChangedFile) {
                 $impactArguments += @('--changed-file', $path)
@@ -58,19 +60,24 @@ try {
             $impactJson = & $python @impactArguments
             Assert-LastExitCode 'Test impact resolution'
             $impact = $impactJson | ConvertFrom-Json
+            $Mode = $impact.mode
             Write-Host ($impact | ConvertTo-Json -Depth 5) -ForegroundColor DarkCyan
-            if ($impact.escalation -eq 'Full') {
+            if ($impact.mode -eq 'Full') {
                 Write-Host 'Cross-cutting change detected; running Full.' -ForegroundColor Yellow
                 & (Join-Path $PSScriptRoot 'test.ps1') -PytestWorkers $PytestWorkers
             }
-            elseif ($impact.escalation) {
-                throw "Unsupported targeted escalation: $($impact.escalation)"
+            elseif ($impact.mode -eq 'Quick') {
+                Invoke-QuickHarness
             }
-            else {
+            elseif ($impact.mode -eq 'Targeted') {
+                Invoke-QuickHarness
                 & (Join-Path $PSScriptRoot 'run-targeted-tests.ps1') `
-                    -Lane @($impact.lanes) `
-                    -PytestWorkers $PytestWorkers
+                    -ApiTest @($impact.tests.api) `
+                    -WebTest @($impact.tests.web) `
+                    -RTest @($impact.tests.r) `
+                    -E2ETest @($impact.tests.e2e)
             }
+            else { throw "Unsupported validation mode: $($impact.mode)" }
         }
         'Full' {
             & (Join-Path $PSScriptRoot 'test.ps1') -PytestWorkers $PytestWorkers

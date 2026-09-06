@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-RISK_ORDER = {"A": 0, "B": 1, "C": 2, "D": 3}
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _normalise(path: str) -> str:
@@ -30,50 +30,79 @@ def _matches(path: str, pattern: str) -> bool:
     return False
 
 
-def resolve(files: list[str], mapping: dict[str, Any]) -> dict[str, Any]:
-    changed = sorted({_normalise(path) for path in files if _normalise(path)})
-    matched_rules: set[str] = set()
-    unmatched: list[str] = []
-    lanes: set[str] = set()
-    risk = "A"
-    escalation: str | None = None
-
-    for path in changed:
-        path_matches = [
-            rule
-            for rule in mapping["rules"]
-            if any(_matches(path, pattern) for pattern in rule["patterns"])
+def _module_for_path(path: str, mapping: dict[str, Any]) -> dict[str, Any] | None:
+    # Test files belong to the same module as their source, including files whose
+    # names differ from the source directory. Browser journeys can span modules.
+    for entry in mapping["modules"]:
+        patterns = entry["patterns"] + [
+            pattern for kind, paths in entry["tests"].items() if kind != "e2e"
+            for pattern in paths
         ]
-        if not path_matches:
-            unmatched.append(path)
+        if any(_matches(path, pattern) for pattern in patterns):
+            return entry
+    return None
+
+
+def resolve(files: list[str], mapping: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
+    changed = sorted({_normalise(path) for path in files if _normalise(path)})
+    tests: dict[str, set[str]] = {kind: set() for kind in ("api", "web", "r", "e2e")}
+    modules: set[str] = set()
+    reasons: list[str] = [] if changed else ["No changed-file scope is available."]
+    for path in changed:
+        if any(_matches(path, pattern) for pattern in mapping["fullPatterns"]):
+            reasons.append(f"Shared foundation or validation infrastructure: {path}")
             continue
-        for rule in path_matches:
-            matched_rules.add(rule["id"])
-            lanes.update(rule.get("lanes", []))
-            if RISK_ORDER[rule["risk"]] > RISK_ORDER[risk]:
-                risk = rule["risk"]
-            if rule.get("escalation"):
-                escalation = rule["escalation"]
-
-    if not changed:
-        escalation = mapping["defaultEscalation"]
-    if unmatched:
-        escalation = mapping["defaultEscalation"]
-        risk = "D"
-    if escalation:
-        lanes.clear()
-
+        if any(_matches(path, pattern) for pattern in mapping["quickPatterns"]):
+            continue
+        # A changed test runs itself, rather than all tests in its language.
+        kind = (
+            "api" if path.startswith("apps/api/tests/test_") and path.endswith(".py") else
+            "web" if path.startswith("apps/web/src/") and ".test." in path else
+            "r" if path.startswith("engine/R/tests/testthat/test-") and path.endswith(".R") else
+            "e2e" if path.startswith("tests/e2e/") and path.endswith(".spec.ts") else None
+        )
+        module = _module_for_path(path, mapping)
+        if kind and (root / path).is_file():
+            tests[kind].add(path)
+            modules.add(module["id"] if module else f"{kind}-tests")
+            continue
+        if module is None:
+            reasons.append(f"Unmapped change: {path}")
+            continue
+        modules.add(module["id"])
+        kinds = (
+            ["api"] if path.startswith("apps/api/") else
+            ["web", "e2e"] if path.startswith("apps/web/") else
+            ["r", "api"] if path.startswith("engine/R/") else []
+        )
+        for test_kind in kinds:
+            patterns = module["tests"].get(test_kind, [])
+            if not patterns and test_kind == "e2e":
+                continue
+            selected = {
+                item.relative_to(root).as_posix()
+                for pattern in patterns for item in root.glob(pattern) if item.is_file()
+            }
+            if test_kind != "e2e":
+                # A broad parent glob must not pull in a specialized module.
+                selected = {path for path in selected
+                            if _module_for_path(path, mapping) == module}
+            if not selected:
+                reasons.append(f"No {test_kind} tests mapped for {module['id']}: {path}")
+            tests[test_kind].update(selected)
+    if len(modules) > 1:
+        reasons.append("Cross-domain change: " + ", ".join(sorted(modules)))
+    mode = "Full" if reasons else "Targeted" if modules else "Quick"
+    if mode != "Targeted":
+        tests = {kind: set() for kind in tests}
     return {
         "schemaVersion": mapping["schemaVersion"],
         "changedFiles": changed,
-        "matchedRules": sorted(matched_rules),
-        "unmatchedFiles": unmatched,
-        "risk": risk,
-        "lanes": sorted(lanes),
-        "escalation": escalation,
-        "deferred": ["coverage", "complete-browser-suite", "release-audit"]
-        if not escalation
-        else [],
+        "mode": mode,
+        "modules": sorted(modules),
+        "tests": {kind: sorted(paths) for kind, paths in tests.items()},
+        "requiresRuntime": mode == "Full" or any(tests[kind] for kind in ("api", "r", "e2e")),
+        "reasons": reasons,
     }
 
 
@@ -139,14 +168,19 @@ def decode_git_paths(raw: bytes) -> list[str]:
     return paths
 
 
-def discover_changed_files(root: Path, base_ref: str) -> list[str]:
+def discover_changed_files(
+    root: Path, base_ref: str, diff_mode: str = "merge-base"
+) -> list[str]:
     # NUL-delimited output bypasses core.quotePath C-style quoting entirely and
     # keeps filenames byte-exact, including spaces, backslashes and quotes.
-    files = decode_git_paths(
-        _git_bytes(root, "diff", "--name-only", "-z", f"{base_ref}...HEAD")
-    )
-    files.extend(decode_git_paths(_git_bytes(root, "diff", "--name-only", "-z")))
-    files.extend(decode_git_paths(_git_bytes(root, "diff", "--name-only", "-z", "--cached")))
+    # CI compares the event's previous/base tree with the tested checkout.
+    # A merge-base diff would miss removals when a push rewinds or replaces history.
+    comparison = [base_ref, "HEAD"] if diff_mode == "direct" else [f"{base_ref}...HEAD"]
+    # Report both sides of a rename so moving code into docs cannot skip its tests.
+    diff_arguments = ("diff", "--name-only", "--no-renames", "-z")
+    files = decode_git_paths(_git_bytes(root, *diff_arguments, *comparison))
+    files.extend(decode_git_paths(_git_bytes(root, *diff_arguments)))
+    files.extend(decode_git_paths(_git_bytes(root, *diff_arguments, "--cached")))
     files.extend(
         decode_git_paths(_git_bytes(root, "ls-files", "--others", "--exclude-standard", "-z"))
     )
@@ -157,6 +191,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--base-ref", default="HEAD~1")
+    parser.add_argument("--diff-mode", choices=("merge-base", "direct"), default="merge-base")
     parser.add_argument("--changed-file", action="append", default=[])
     parser.add_argument("--map", dest="map_path", type=Path)
     arguments = parser.parse_args()
@@ -165,20 +200,13 @@ def main() -> int:
     map_path = arguments.map_path or root / "scripts" / "test-impact-map.json"
     mapping = json.loads(map_path.read_text(encoding="utf-8"))
     try:
-        files = arguments.changed_file or discover_changed_files(root, arguments.base_ref)
-        plan = resolve(files, mapping)
+        files = arguments.changed_file or discover_changed_files(
+            root, arguments.base_ref, arguments.diff_mode
+        )
+        plan = resolve(files, mapping, root)
     except RuntimeError as error:
-        plan = {
-            "schemaVersion": mapping["schemaVersion"],
-            "changedFiles": [],
-            "matchedRules": [],
-            "unmatchedFiles": [],
-            "risk": "D",
-            "lanes": [],
-            "escalation": mapping["defaultEscalation"],
-            "deferred": [],
-            "reason": str(error),
-        }
+        plan = resolve([], mapping, root)
+        plan["reasons"] = [str(error)]
     # ASCII-escaped JSON survives Windows hosts whose native-command stdout
     # decoding is not UTF-8; ConvertFrom-Json restores the original path.
     json.dump(plan, sys.stdout, ensure_ascii=True, indent=2)
