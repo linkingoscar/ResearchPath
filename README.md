@@ -2,6 +2,8 @@
 
 ResearchPath 是一个 Windows 本地优先、点按式、按需执行的实证研究工作台。React 负责交互，FastAPI 负责任务、分析索引和本地持久化，R 负责统计估计；原始数据默认留在本机。
 
+产品介绍页：[researchpath-pied.vercel.app](https://researchpath-pied.vercel.app/)；页面源码位于 [`pages/`](pages/)。
+
 ## 当前产品
 
 已有数据的日常路径固定为三个一级工作区：

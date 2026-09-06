@@ -4509,14 +4509,15 @@
       "category": "repository-licensing",
       "priority": "P1",
       "title": "仓库缺少所有者选定的根级源代码许可证",
-      "status": "implemented_pending_verification",
+      "status": "closed",
       "ownerRole": "repository-owner",
       "targetMilestone": "对外描述为开源软件或授予复用权前",
       "evidence": [
         "仓库根目录没有LICENSE、COPYING或等价授权正文，GitHub licenseInfo为null；DESCRIPTION中的MIT仅描述R依赖项目，npm包仍标记private。",
         "NOTICE.md已明确公开可见性本身不授予复制、修改或再分发许可，但不能代替所有者选择许可证。",
         "2026-09-02：公开仓库采用无根级许可证的保守边界；README 与 NOTICE 明确公开可见不等于复制、修改或再分发许可。该项继续 open，直到所有者明确选择许可证或其他复用授权策略。",
-        "2026-09-06：仓库所有者明确选择保留所有权；新增根 LICENSE 专有许可，README/NOTICE、R DESCRIPTION 与 npm 元数据同步为 proprietary/UNLICENSED。合并并复核公开仓库展示前保持待验证。"
+        "2026-09-06：仓库所有者明确选择保留所有权；新增根 LICENSE 专有许可，README/NOTICE、R DESCRIPTION 与 npm 元数据同步为 proprietary/UNLICENSED。",
+        "2026-09-06：公开 main 已包含上述文件；GitHub 仓库 API 将自定义专有许可证识别为 Other/NOASSERTION，符合不声明开源 SPDX 许可证的预期。"
       ],
       "acceptance": [
         "仓库所有者明确选择开放源代码许可证或保留所有权的发布政策。",
@@ -4524,7 +4525,8 @@
       ],
       "closureEvidence": [
         "根 LICENSE 明确保留所有权，并区分 GitHub 服务内查看/fork 权利与仓库所有者未授予的额外使用、修改、再分发、托管和衍生作品权利。",
-        "README 与 NOTICE 明确项目不是开源软件；DESCRIPTION 使用 file LICENSE，根与 Web npm package 标记 UNLICENSED；第三方包、数据与 PROCESS 宏继续服从各自许可。"
+        "README 与 NOTICE 明确项目不是开源软件；DESCRIPTION 使用 file LICENSE，根与 Web npm package 标记 UNLICENSED；第三方包、数据与 PROCESS 宏继续服从各自许可。",
+        "公开仓库默认分支 main 已复核：license.key=other、spdx_id=NOASSERTION，没有被 GitHub 误标为 MIT 或其他开放源代码许可证。"
       ]
     },
     {
@@ -4759,20 +4761,23 @@
       "id": "DEBT-207",
       "category": "pages-deployment",
       "priority": "P2",
-      "title": "GitHub Pages 自动部署监听已不存在的 master 默认分支",
+      "title": "GitHub Pages 首次启用受仓库管理权限阻断",
       "status": "implemented_pending_verification",
       "ownerRole": "release-engineering",
       "targetMilestone": "下一次 Pages 内容变更",
       "evidence": [
         "git remote show origin 确认 HEAD branch 为 main；.github/workflows/pages.yml 的 push.branches 仍为 master，因此 main 上 pages/** 更新不会自动部署。",
-        "2026-09-06：workflow 已监听 main；Pages 内容同步到 Data/Analyze/Output 信息架构并修正旧 master 链接。该真实内容变更合并后将触发现有部署流程，成功前保持待验证。"
+        "2026-09-06：workflow 已监听 main；Pages 内容同步到 Data/Analyze/Output 信息架构并修正旧 master 链接。",
+        "2026-09-06：Deploy GitHub Pages run 34009410196 已由真实 pages 内容变更触发，但 Configure Pages 先返回站点 Not Found，继而因 GitHub App 缺少仓库 administration 权限而无法创建站点；内容构建尚未开始。",
+        "2026-09-06：同一 pages 静态源码已通过 Vercel 生产部署并逐项返回 HTTP 200。GitHub Pages workflow 改为 workflow_dispatch 手动备用路径，移除无效的自动 enablement，避免每次 main 提交重复产生已知权限红灯。"
       ],
       "acceptance": [
-        "Pages workflow 的 push 分支与远端默认 main 一致，并由供应链治理测试阻止回退到 master。",
-        "合并后一次 pages 路径变更或 workflow_dispatch 成功完成 build/deploy 后关闭。"
+        "仓库所有者在 Settings → Pages 中选择 GitHub Actions 作为发布源。",
+        "启用后由 workflow_dispatch 成功完成 build/deploy；在此之前不得用其他托管成功冒充 GitHub Pages 已验证。"
       ],
       "closureEvidence": [
-        "pages.yml 已改为监听 main；test_supply_chain_governance.py 新增 main/master 分支断言。"
+        "pages.yml 保留 SHA 固定、最小权限的 build/deploy，并改为显式 workflow_dispatch；供应链测试阻止恢复无意的 push 自动触发。",
+        "Vercel 生产地址 https://researchpath-pied.vercel.app/ 已验证 HTML、CSS、JavaScript 和 SVG 图标均返回 HTTP 200；该证据只关闭公网介绍页发布，不关闭 GitHub Pages 首次启用事项。"
       ]
     },
     {

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Url = "https://afhayes.com/public/hayes2022data.zip",
+    [string]$Url = "https://www.afhayes.com/public/hayes2022data.zip",
     [string]$ExpectedSha256 = "8459974F96EDA74430EDC609CFE1F02F881CA59A240CFD3C552120CA2719692A",
     [string]$Destination = ""
 )

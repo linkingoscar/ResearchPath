@@ -2,13 +2,6 @@ name: Deploy GitHub Pages
 run-name: Deploy GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "pages/**"
-      - "assets/branding/researchpath-icon.png"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -31,8 +24,6 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
-        with:
-          enablement: true
 
       - name: Prepare static site
         shell: bash
@@ -43,7 +34,7 @@ jobs:
           cp pages/index.html _site/index.html
           cp pages/styles.css _site/styles.css
           cp pages/app.js _site/app.js
-          cp assets/branding/researchpath-icon.png _site/assets/researchpath-icon.png
+          cp pages/assets/researchpath-icon.svg _site/assets/researchpath-icon.svg
           touch _site/.nojekyll
 
       - name: Upload Pages artifact

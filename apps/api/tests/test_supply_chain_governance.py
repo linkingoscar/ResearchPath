@@ -15,7 +15,9 @@ def test_quality_workflow_avoids_duplicate_branch_and_pull_request_runs() -> Non
 
 def test_pages_workflow_actions_are_sha_pinned_and_scoped() -> None:
     pages = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
-    assert re.search(r"branches:\s*\n\s*- main", pages)
+    triggers = pages.split("permissions:", 1)[0]
+    assert "workflow_dispatch:" in triggers
+    assert "push:" not in triggers
     assert not re.search(r"branches:\s*\n\s*- master", pages)
     assert not re.search(r"uses:\s+[^\s]+@v\d+", pages)
     assert "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" in pages
