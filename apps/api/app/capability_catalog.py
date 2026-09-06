@@ -326,12 +326,24 @@ def capability_family_gate_metadata(slice_ids: tuple[str, ...]) -> CapabilityGat
         return derive_capability_gates(ValidationEvidence())
     external_oracles = {item.external_oracle for item in evidence if item.external_oracle}
     numeric_goldens = {item.numeric_golden_id for item in evidence if item.numeric_golden_id}
+    oracle_independence = {
+        item.oracle_independence for item in evidence if item.oracle_independence
+    }
+    oracle_independence_complete = bool(external_oracles) and all(
+        item.external_oracle is None or item.oracle_independence
+        for item in evidence
+    )
     aggregate = ValidationEvidence(
         contract_tests=all(item.contract_tests for item in evidence),
         applicability_tests=all(item.applicability_tests for item in evidence),
         failure_fixtures=all(item.failure_fixtures for item in evidence),
         external_oracle=next(iter(external_oracles)) if len(external_oracles) == 1 else None,
         numeric_golden_id=next(iter(numeric_goldens)) if len(numeric_goldens) == 1 else None,
+        oracle_independence=(
+            " | ".join(sorted(oracle_independence))
+            if oracle_independence_complete
+            else None
+        ),
     )
     return derive_capability_gates(aggregate)
 

@@ -95,7 +95,7 @@ def test_all_three_layers_and_named_human_confirmation_are_jointly_required() ->
     assert confirmed["finalStatus"] == "eligible"
     assert confirmed["finalEligible"] is True
 
-    result["provenance"] = {"sliceId": "power_analysis.analytic.regression", "dataSha256": "a" * 64}
+    result["provenance"] = {"sliceId": "model.sem", "dataSha256": "a" * 64}
     internal_only = build_publication_gate(
         result,
         confirmed_by="reviewer@example.org",
