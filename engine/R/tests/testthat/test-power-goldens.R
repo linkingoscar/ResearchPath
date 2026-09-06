@@ -1,10 +1,10 @@
-# Golden test: analytic power workbench vs the pwr package.
+# Golden test: analytic power workbench vs an independent SciPy oracle.
 #
-# The capability registry declares power slices externally validated with
-# numeric_golden_id "power-goldens-v1"; this test makes that claim real by
+# The product runner delegates to R pwr, while the checked-in reference values
+# are generated from SciPy's noncentral t/F distributions and independent root
+# solving. This test makes the external-validation claim executable by
 # running the engine's power path (run_advanced_analysis.R, family
-# power_analysis, method analytic) over the frozen spec grid and comparing
-# solvedValue / achievedPower against direct pwr reference values.
+# power_analysis, method analytic) over the frozen spec grid.
 
 project_root <- Sys.getenv("RESEARCHPATH_PROJECT_ROOT")
 golden_path <- file.path(project_root, "engine", "R", "tests", "reference", "power-goldens-v1.json")
@@ -31,7 +31,7 @@ run_engine_power <- function(case, work_dir) {
   if (!is.null(case$targetCIWidth)) spec$targetCIWidth <- case$targetCIWidth
   if (!is.null(case$confidenceLevel)) spec$confidenceLevel <- case$confidenceLevel
   if (!is.null(case$sd)) spec$sd <- case$sd
-  if (case$solveFor == "sensitivity") spec$targetPower <- if (case$id == "regression_sensitivity_r2change_n100") 0.9 else 0.8
+  if (!is.null(case$targetPower)) spec$targetPower <- as.numeric(case$targetPower)
 
   input_path <- file.path(work_dir, "input.json")
   output_path <- file.path(work_dir, "output.json")
@@ -55,7 +55,7 @@ run_engine_power <- function(case, work_dir) {
 }
 
 for (case in power_golden$cases) {
-  test_that(paste0("analytic power ", case$id, " matches the pwr oracle"), {
+  test_that(paste0("analytic power ", case$id, " matches the SciPy oracle"), {
     work <- tempfile(paste0("rp-power-", case$id, "-")); dir.create(work)
     result <- run_engine_power(case, work)
     family_result <- result$familyResult

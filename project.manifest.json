@@ -120,6 +120,9 @@
     "riskGovernance": "docs/06-安全风险与债务治理.md",
     "capabilityRoadmap": "docs/07-能力矩阵与路线图.md",
     "assetArchive": "docs/08-资产包与历史档案.md",
+    "usabilityProtocol": "docs/11-真人可用性验证方案.md",
+    "license": "LICENSE",
+    "licensingModel": "proprietary-all-rights-reserved",
     "historicalSecurityAudit": "archive/project-history/audits/2026-07-15-security-review/README.md",
     "debtRegister": "docs/debt-register.json",
     "debtRegisterSchema": "docs/debt-register.schema.json"

@@ -1,9 +1,11 @@
 # Distribution and third-party notices
 
-ResearchPath does not currently include a repository-wide `LICENSE` file.
-Public visibility by itself does not grant permission to copy, modify, or
-redistribute the repository. The repository owner must select and add the
-intended source license before describing the project as open source.
+ResearchPath is proprietary software distributed under the root `LICENSE`.
+The repository is publicly accessible for inspection, but it is not open
+source and grants no additional permission to use, copy, modify, redistribute,
+host, or create derivative works. GitHub platform viewing and forking remain
+subject to GitHub's Terms of Service. Any broader permission requires prior
+written approval from the copyright holder.
 
 The official **PROCESS for R 5.0** macro by Andrew F. Hayes is not included in
 this repository. ResearchPath contains an independent estimator and frozen

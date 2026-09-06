@@ -337,21 +337,21 @@
         "已登记 contract、适用性与失败边界测试；单次运行仍须单独检查样本流、估计状态、警告与适用性。"
       ],
       "oracle": {
-        "level": "none",
-        "name": null,
-        "independence": null
+        "level": "external",
+        "name": "SciPy 1.15.3 noncentral t/F distributions with independent root solving",
+        "independence": "Python SciPy generator evaluates the declared noncentral F equations directly; it does not call the R pwr package or any ResearchPath product runner."
       },
       "tests": {
         "contract": true,
         "applicability": true,
         "failureFixtures": true,
-        "numericGoldenId": null
+        "numericGoldenId": "power-goldens-v1"
       },
       "limitations": [
         "Cohen f²/R² change"
       ],
       "versions": {
-        "evidence": "1.0.0",
+        "evidence": "1.1.0",
         "engineContract": "0.3.0"
       }
     },
@@ -382,21 +382,21 @@
         "已登记 contract、适用性与失败边界测试；单次运行仍须单独检查样本流、估计状态、警告与适用性。"
       ],
       "oracle": {
-        "level": "none",
-        "name": null,
-        "independence": null
+        "level": "external",
+        "name": "SciPy 1.15.3 noncentral t/F distributions with independent root solving",
+        "independence": "Python SciPy generator evaluates the declared two-sided noncentral t equations directly; it does not call the R pwr package or any ResearchPath product runner."
       },
       "tests": {
         "contract": true,
         "applicability": true,
         "failureFixtures": true,
-        "numericGoldenId": null
+        "numericGoldenId": "power-goldens-v1"
       },
       "limitations": [
         "不冒充配对/重复测量 t"
       ],
       "versions": {
-        "evidence": "1.0.0",
+        "evidence": "1.1.0",
         "engineContract": "0.3.0"
       }
     },
@@ -425,21 +425,21 @@
         "已登记 contract、适用性与失败边界测试；单次运行仍须单独检查样本流、估计状态、警告与适用性。"
       ],
       "oracle": {
-        "level": "none",
-        "name": null,
-        "independence": null
+        "level": "external",
+        "name": "SciPy 1.15.3 noncentral t/F distributions with independent root solving",
+        "independence": "Python SciPy generator evaluates the declared balanced-design noncentral F equations directly; it does not call the R pwr package or any ResearchPath product runner."
       },
       "tests": {
         "contract": true,
         "applicability": true,
         "failureFixtures": true,
-        "numericGoldenId": null
+        "numericGoldenId": "power-goldens-v1"
       },
       "limitations": [
         "仅预先声明的均衡随机组间设计；不替代准实验识别功效分析"
       ],
       "versions": {
-        "evidence": "1.0.0",
+        "evidence": "1.1.0",
         "engineContract": "0.3.0"
       }
     },

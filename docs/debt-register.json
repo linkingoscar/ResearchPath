@@ -2,7 +2,7 @@
   "$schema": "./debt-register.schema.json",
   "schemaVersion": "1.0.0",
   "project": "ResearchPath",
-  "asOf": "2026-09-05",
+  "asOf": "2026-09-06",
   "statusVocabulary": [
     "open",
     "in_progress",
@@ -4509,19 +4509,23 @@
       "category": "repository-licensing",
       "priority": "P1",
       "title": "仓库缺少所有者选定的根级源代码许可证",
-      "status": "open",
+      "status": "implemented_pending_verification",
       "ownerRole": "repository-owner",
       "targetMilestone": "对外描述为开源软件或授予复用权前",
       "evidence": [
         "仓库根目录没有LICENSE、COPYING或等价授权正文，GitHub licenseInfo为null；DESCRIPTION中的MIT仅描述R依赖项目，npm包仍标记private。",
         "NOTICE.md已明确公开可见性本身不授予复制、修改或再分发许可，但不能代替所有者选择许可证。",
-        "2026-09-02：公开仓库采用无根级许可证的保守边界；README 与 NOTICE 明确公开可见不等于复制、修改或再分发许可。该项继续 open，直到所有者明确选择许可证或其他复用授权策略。"
+        "2026-09-02：公开仓库采用无根级许可证的保守边界；README 与 NOTICE 明确公开可见不等于复制、修改或再分发许可。该项继续 open，直到所有者明确选择许可证或其他复用授权策略。",
+        "2026-09-06：仓库所有者明确选择保留所有权；新增根 LICENSE 专有许可，README/NOTICE、R DESCRIPTION 与 npm 元数据同步为 proprietary/UNLICENSED。合并并复核公开仓库展示前保持待验证。"
       ],
       "acceptance": [
         "仓库所有者明确选择开放源代码许可证或保留所有权的发布政策。",
         "根LICENSE正文、README声明、文档/样例/第三方资产边界保持一致，并通过GitHub许可证识别和发布候选复核。"
       ],
-      "closureEvidence": []
+      "closureEvidence": [
+        "根 LICENSE 明确保留所有权，并区分 GitHub 服务内查看/fork 权利与仓库所有者未授予的额外使用、修改、再分发、托管和衍生作品权利。",
+        "README 与 NOTICE 明确项目不是开源软件；DESCRIPTION 使用 file LICENSE，根与 Web npm package 标记 UNLICENSED；第三方包、数据与 PROCESS 宏继续服从各自许可。"
+      ]
     },
     {
       "id": "DEBT-197",
@@ -4738,7 +4742,8 @@
         "tests/e2e/prd-workbench.spec.ts 只覆盖应用壳、键盘 tab、无全局 glass 与 390px 横向溢出；未进入数据表、方法目录、配置工作台和 Output 历史结果等密集路由。",
         "现有其他 E2E 多使用 1440/390，未形成 PRD 指定 1024/760/420 三档的系统性工作区回归。",
         "2026-09-05：prd-workbench E2E 新增 1024/760/420 三档 Data、Analyze 方法目录与 Output 工作区无横向溢出和严重无障碍检查；专用配置与历史结果已有 390px 路径，但尚未在三档逐类复跑，因此保持 open。",
-        "2026-09-06：现有实证、PROCESS、SEM 与描述统计后 Output 历史真实旅程均复用统一三断点助手，逐档检查主操作可见可聚焦、无页面横向溢出与严重无障碍问题；没有增加重复旅程或新 CI 门禁。"
+        "2026-09-06：现有实证、PROCESS、SEM 与描述统计后 Output 历史真实旅程均复用统一三断点助手，逐档检查主操作可见可聚焦、无页面横向溢出与严重无障碍问题；没有增加重复旅程或新 CI 门禁。",
+        "2026-09-06：PR #5 已 squash 合并到 main（8190b7e63d5529de8e11e88a7660b2462eeec4d3）。对应 hosted run 34007258315 在执行项目测试前停于 Hayes 数据包下载，错误为 RemoteCertificateNameMismatch；该红灯不作为代码失败，也不能作为三断点执行通过证据。"
       ],
       "acceptance": [
         "为数据、分析目录、实证配置、PROCESS/SEM 配置与 Output 历史结果建立可重复种子工作区场景。",
@@ -4747,7 +4752,7 @@
       ],
       "closureEvidence": [
         "Playwright 用例发现保持 10 个文件、26 条用例；源码上限、changelog governance 与差异格式检查通过。",
-        "待本批 hosted Full 在 Windows/R/Chromium 环境通过后关闭。"
+        "合并后的测试代码已进入 main；待 Windows/R/Chromium 实际执行三断点旅程通过后关闭，不因外部下载前置失败伪造验证结论。"
       ]
     },
     {
@@ -4759,7 +4764,8 @@
       "ownerRole": "release-engineering",
       "targetMilestone": "下一次 Pages 内容变更",
       "evidence": [
-        "git remote show origin 确认 HEAD branch 为 main；.github/workflows/pages.yml 的 push.branches 仍为 master，因此 main 上 pages/** 更新不会自动部署。"
+        "git remote show origin 确认 HEAD branch 为 main；.github/workflows/pages.yml 的 push.branches 仍为 master，因此 main 上 pages/** 更新不会自动部署。",
+        "2026-09-06：workflow 已监听 main；Pages 内容同步到 Data/Analyze/Output 信息架构并修正旧 master 链接。该真实内容变更合并后将触发现有部署流程，成功前保持待验证。"
       ],
       "acceptance": [
         "Pages workflow 的 push 分支与远端默认 main 一致，并由供应链治理测试阻止回退到 master。",

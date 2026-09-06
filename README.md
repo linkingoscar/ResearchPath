@@ -110,4 +110,4 @@ Output 使用服务端 `AnalysisIndex` 保存 AnalysisDocument、运行引用、
 
 ## 使用与授权
 
-本仓库公开用于查看和评估，目前没有根级开源许可证，因此不能将公开可见性理解为复制、修改或再分发许可，也不应把项目描述为开源软件。具体边界见 [NOTICE.md](NOTICE.md)；官方 PROCESS for R 5.0 宏不包含在本仓库中。
+ResearchPath 采用保留所有权的专有许可，不是开源软件。仓库公开可见仅用于审阅；除 GitHub 服务条款为站内查看和 fork 提供的必要权利外，不授予使用、复制、修改、再分发、托管或制作衍生作品的许可。完整条款见 [LICENSE](LICENSE)，第三方材料和官方 PROCESS for R 5.0 宏边界见 [NOTICE.md](NOTICE.md)。

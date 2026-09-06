@@ -1,10 +1,11 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "provenance": {
-    "oracle": "pwr package (direct calls, documented spec mapping)",
-    "pwrVersion": "1.3.0",
-    "generator": "output/validation-datasets/build_power_oracle.R",
-    "note": "validates spec->pwr argument plumbing (u/v/f2, k/n/f, per-group n, ceil rounding, back-check power, r2-change conversion, precision t-iteration); monte carlo and powerCurve are not part of golden v1",
+    "oracle": "SciPy noncentral t/F distributions with independent root solving",
+    "scipyVersion": "1.15.3",
+    "generator": "engine/R/tests/reference/generate-power-independent-goldens.py",
+    "independence": "Python SciPy evaluates the reference equations directly and does not call the R engine or any product runner.",
+    "note": "Covers analytic regression, one/two-sample t, balanced between-group ANOVA, sensitivity, ceiling rules, and CI-width iteration; Monte Carlo power is outside this golden.",
     "tolerance": {
       "solvedValue": 1e-09,
       "achievedPower": 1e-09
@@ -23,7 +24,7 @@
       "groups": 1,
       "expected": {
         "solvedValue": 77,
-        "achievedPower": 0.801765521057435
+        "achievedPower": 0.801765520935709
       }
     },
     {
@@ -39,7 +40,7 @@
       "groups": 1,
       "expected": {
         "solvedValue": 120,
-        "achievedPower": 0.745065164176421
+        "achievedPower": 0.745065163887565
       }
     },
     {
@@ -52,7 +53,7 @@
       "predictors": 2,
       "groups": 1,
       "expected": {
-        "solvedValue": 0.125244811866843
+        "solvedValue": 0.1252448119251271
       }
     },
     {
@@ -64,8 +65,9 @@
       "sampleSize": 100,
       "predictors": 4,
       "groups": 1,
+      "targetPower": 0.9,
       "expected": {
-        "solvedValue": 0.139369512397729
+        "solvedValue": 0.13936951250455196
       }
     },
     {
@@ -79,7 +81,7 @@
       "groups": 1,
       "expected": {
         "solvedValue": 34,
-        "achievedPower": 0.80777750127944
+        "achievedPower": 0.8077775012792738
       }
     },
     {
@@ -93,7 +95,7 @@
       "groups": 2,
       "expected": {
         "solvedValue": 128,
-        "achievedPower": 0.801459557922327
+        "achievedPower": 0.8014595579287103
       }
     },
     {
@@ -108,7 +110,7 @@
       "groups": 2,
       "expected": {
         "solvedValue": 176,
-        "achievedPower": 0.507628971689198
+        "achievedPower": 0.5076289716902415
       }
     },
     {
@@ -120,7 +122,7 @@
       "sampleSize": 60,
       "groups": 1,
       "expected": {
-        "solvedValue": 0.367704316087217
+        "solvedValue": 0.36770431608734594
       }
     },
     {
@@ -134,7 +136,7 @@
       "groups": 3,
       "expected": {
         "solvedValue": 159,
-        "achievedPower": 0.80488728536347
+        "achievedPower": 0.804887285301069
       }
     },
     {
@@ -149,7 +151,7 @@
       "groups": 4,
       "expected": {
         "solvedValue": 160,
-        "achievedPower": 0.53597926743542
+        "achievedPower": 0.5359792673171242
       }
     },
     {
@@ -161,7 +163,7 @@
       "sampleSize": 120,
       "groups": 3,
       "expected": {
-        "solvedValue": 0.287020689930698
+        "solvedValue": 0.2870206899596319
       }
     },
     {

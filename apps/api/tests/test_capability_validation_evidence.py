@@ -149,7 +149,7 @@ def test_process_golden_generator_does_not_call_the_product_runner() -> None:
     assert "run_analysis.R" not in text
 
 
-def test_pwr_power_goldens_are_not_marked_as_independent_external_validation() -> None:
+def test_analytic_power_uses_an_independent_scipy_oracle() -> None:
     analytic_power = [
         capability
         for capability in ACTIVE_CAPABILITIES
@@ -158,10 +158,19 @@ def test_pwr_power_goldens_are_not_marked_as_independent_external_validation() -
     assert len(analytic_power) == 3
     for capability in analytic_power:
         evidence = capability.validation_evidence
-        assert evidence.external_oracle is None, (
-            f"{capability.slice_id} shares the pwr implementation with its golden "
-            "and must not claim an independent external oracle"
-        )
-        assert evidence.oracle_independence is None
-        assert capability.validation_level != "externally_validated"
+        assert evidence.external_oracle is not None
+        assert "SciPy" in evidence.external_oracle
+        assert evidence.numeric_golden_id == "power-goldens-v1"
+        assert evidence.oracle_independence is not None
+        assert "product runner" in evidence.oracle_independence
+        assert "does not call the R pwr package" in evidence.oracle_independence
+        assert capability.validation_level == "externally_validated"
+        assert capability.maturity_level == "reviewer_ready"
         assert capability.publication_eligibility != "eligible"
+
+    generator = REFERENCE_DIR / "generate-power-independent-goldens.py"
+    assert generator.exists()
+    text = generator.read_text(encoding="utf-8", errors="replace")
+    assert "from scipy.stats import" in text
+    assert "run_advanced_analysis.R" not in text
+    assert "library(pwr)" not in text
