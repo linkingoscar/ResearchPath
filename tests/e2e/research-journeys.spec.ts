@@ -86,6 +86,9 @@ for (const procedure of ['描述统计', '相关分析', '分层线性回归']) 
     if (procedure === '描述统计') {
       await page.getByRole('tab', { name: '输出', exact: true }).click()
       await expect(page.getByRole('heading', { name: '输出', exact: true })).toBeVisible()
+      const outputSearch = page.getByRole('searchbox', { name: '搜索输出' })
+      await outputSearch.fill(job.id)
+      await expect(outputSearch).toHaveValue(job.id)
       await expectPrdBreakpointUsability(page, page.getByRole('checkbox', { name: '选择最新结果用于批量导出' }))
     }
     await failures.expectClean()
