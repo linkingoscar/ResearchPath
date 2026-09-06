@@ -35,11 +35,14 @@ def count_explicit_any_usages() -> tuple[int, dict[str, int]]:
 
 
 def run_pyright() -> tuple[dict[str, int], dict[str, Any]]:
-    executable = shutil.which("pyright")
-    if executable is None:
-        raise RuntimeError("Install dependencies before running the pinned Pyright checker")
+    executable = shutil.which("node")
+    pyright = ROOT / "node_modules" / "pyright" / "index.js"
+    if executable is None or not pyright.exists():
+        raise RuntimeError(
+            "Install Node dependencies before running the pinned Pyright checker"
+        )
     process = subprocess.run(
-        [executable, "--outputjson"],
+        [executable, str(pyright), "--outputjson"],
         cwd=ROOT,
         check=False,
         capture_output=True,
