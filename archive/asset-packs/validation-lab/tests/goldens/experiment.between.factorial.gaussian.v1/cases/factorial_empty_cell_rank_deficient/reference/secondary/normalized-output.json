@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "RANK_DEFICIENT_DESIGN",
-    "message": "Factorial design contains empty cells or rank deficient matrix"
-  }
-}

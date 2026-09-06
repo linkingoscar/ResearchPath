@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "MISSING_PREDICTOR_VARIABLE",
-    "message": "Predictor variable 'x' is missing from input dataset"
-  }
-}

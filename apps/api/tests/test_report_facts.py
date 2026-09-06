@@ -112,5 +112,5 @@ def test_generated_report_facts_have_no_copied_values() -> None:
     assert all(str(fact["sourceResultId"]) == "run_report_facts" for fact in facts)
 
 
-def test_legacy_result_without_report_facts_remains_resolvable() -> None:
+def test_result_without_report_facts_remains_resolvable() -> None:
     assert resolve_report_facts({"estimates": []}) == []

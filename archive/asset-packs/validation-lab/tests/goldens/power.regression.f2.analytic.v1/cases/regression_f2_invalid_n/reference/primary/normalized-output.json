@@ -1,9 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "POWER_INVALID_DEGREES_OF_FREEDOM",
-    "message": "f2 must be non-negative and u/v must both be positive",
-    "mustNotReturnEstimates": true,
-    "mustNotFallback": true
-  }
-}

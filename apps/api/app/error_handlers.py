@@ -38,7 +38,7 @@ def register_error_handlers(application: FastAPI) -> None:
                 detail.get("remediation"),
             )
         else:
-            # list（校验错误）等形状保持原样，前端 renderDetail 兼容
+            # list（校验错误）等形状保持原样，供前端 renderDetail 展示
             body = detail
         return JSONResponse(status_code=exc.status_code, content={"detail": body})
 

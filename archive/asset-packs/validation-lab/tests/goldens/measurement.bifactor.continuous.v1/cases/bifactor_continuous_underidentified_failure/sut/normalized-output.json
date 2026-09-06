@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "UNDERIDENTIFIED_SPECIFIC_FACTOR",
-    "message": "Bifactor model requires at least 2 items per specific factor and 3 total specific items"
-  }
-}

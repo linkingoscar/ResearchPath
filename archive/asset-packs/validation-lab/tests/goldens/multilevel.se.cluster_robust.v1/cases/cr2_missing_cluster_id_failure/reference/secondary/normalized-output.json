@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "MISSING_CLUSTER_VARIABLE",
-    "message": "Cluster-robust SE estimation requires at least 2 distinct clusters"
-  }
-}

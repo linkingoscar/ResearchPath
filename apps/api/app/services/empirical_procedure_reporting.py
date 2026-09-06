@@ -34,7 +34,7 @@ def scope_procedure_workbook(workbook: Workbook, report: Mapping[str, object]) -
     procedure = _mapping(report.get("options")).get("procedure")
     if procedure is None:
         return
-    # Sheets from empty compatibility objects must never appear as executed output.
+    # Sheets from empty placeholder objects must never appear as executed output.
     always_conditional = {
         "描述统计": bool(report.get("descriptives")),
         "频数分布": bool(report.get("frequencies")),

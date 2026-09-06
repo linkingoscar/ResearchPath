@@ -1,5 +1,5 @@
 {
   "files": {},
-  "policy": "Physical line counts include blank lines. Files listed here were audited when the raw-count gate replaced Measure-Object -Line; each value is frozen and must only decrease. New offenders may not be added without a debt item and review.",
+  "policy": "Physical line counts include blank lines. Listed files may shrink but must not grow; new exceptions require an explicit architecture decision.",
   "schemaVersion": "1.0.0"
 }

@@ -85,8 +85,8 @@ $renvBootstrapPrelude = ".libPaths(unique(c('$renvBootstrapLibraryForR', .libPat
 $installedRenvVersion = & $rscript --vanilla -e "$renvBootstrapPrelude if (requireNamespace('renv', lib.loc='$renvBootstrapLibraryForR', quietly=TRUE)) cat(as.character(packageVersion('renv', lib.loc='$renvBootstrapLibraryForR')))"
 if ($installedRenvVersion -ne $renvVersion) {
     $renvArchive = Join-Path $runtime "renv_$renvVersion.tar.gz"
-    # 当前 CRAN 版本在 src/contrib/，已发布版本在新版本上线后移入 Archive。
-    # 先试 Archive（旧版本），404 时回退当前目录（新版本）。
+    # CRAN 将非当前版本放在 Archive；当前版本位于 src/contrib/。
+    # 先尝试版本归档，404 时再尝试当前目录。
     $renvUri = "https://cloud.r-project.org/src/contrib/Archive/renv/renv_$renvVersion.tar.gz"
     try {
         Invoke-WebRequest -Uri $renvUri -OutFile $renvArchive

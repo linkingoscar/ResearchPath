@@ -326,7 +326,7 @@ coefficient_rows <- function(model, equation_id) {
 }
 
 # ---------------------------------------------------------------------------
-# Johnson-Neyman Floodlight Analysis (WP-CORE-Q-06)
+# Johnson-Neyman Floodlight Analysis
 # ---------------------------------------------------------------------------
 
 calc_johnson_neyman <- function(b1, b3, var_b1, var_b3, cov_b1_b3, df_res, w_min, w_max, confidence_level = 0.95) {
@@ -377,4 +377,3 @@ calc_johnson_neyman <- function(b1, b3, var_b1, var_b3, cov_b1_b3, df_res, w_min
     )
   )
 }
-

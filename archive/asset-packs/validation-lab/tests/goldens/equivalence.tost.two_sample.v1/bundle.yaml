@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: equivalence.tost.two_sample.v1
-methodFamily: equivalence
-cases:
-- tost_two_sample_equivalence
-- tost_unequal_n
-- tost_bound_exact
-- tost_invalid_bounds

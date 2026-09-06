@@ -1,8 +1,0 @@
-{
-  "testType": "two_sample",
-  "effectSize": 0.0,
-  "alpha": 0.01,
-  "n1": 2,
-  "n2": 2,
-  "alternative": "two_sided"
-}

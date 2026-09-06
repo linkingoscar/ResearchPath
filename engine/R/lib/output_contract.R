@@ -1,4 +1,4 @@
-# Unified R -> Python result output layer (DEBT-003).
+# Unified R -> Python result output layer.
 #
 # Every R execution entrypoint (run_analysis.R, run_empirical_analysis.R,
 # run_advanced_analysis.R, lib/sem_analysis.R) writes its result document

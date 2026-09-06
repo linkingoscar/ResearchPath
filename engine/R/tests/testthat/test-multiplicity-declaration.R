@@ -24,7 +24,7 @@ run_declared_multiplicity_case <- function(adjustment, declared_count, p_values)
     list(variables = lapply(variable_ids, function(id) list(id = id)), multiplicity = list()),
     NULL,
     NULL,
-    "legacy",
+    "inferred",
     list(
       hypotheses = list(),
       estimands = list(),
@@ -90,11 +90,11 @@ test_that("declaration-driven multiplicity uses declared estimands and excludes 
   )
   result <- researchpath_apply_global_multiplicity(
     options, FALSE, which(upper.tri(raw) & is.finite(raw)), raw, 4,
-    correlations, group, regression, "legacy", declaration
+    correlations, group, regression, "inferred", declaration
   )
 
   expect_identical(result$declarationStatus, "typed")
-  expect_false(result$legacyExecutionDerivedFamily)
+  expect_false(result$executionDerivedFamily)
   expect_identical(result$familySize, 3L)
   expect_true(all(c("primary_hypotheses", "exploratory_effects") %in% vapply(result$ledger$families, `[[`, character(1), "id")))
   expect_identical(result$hierarchicalRegression$blocks[[1]]$coefficients[[1]]$multiplicityFamilySize, 2L)
@@ -104,7 +104,7 @@ test_that("declaration-driven multiplicity uses declared estimands and excludes 
   expect_true(all(vapply(result$ledger$results, function(row) !identical(row$analysisRole, "adjustment_covariate"), logical(1))))
 })
 
-test_that("legacy execution-derived multiplicity remains explicit and ineligible", {
+test_that("execution-derived multiplicity remains explicit and ineligible", {
   options <- list(multiplicityPAdjust = "BH", controlVariableIds = character(0))
   raw <- matrix(c(NA_real_, 0.01, 0.01, NA_real_), 2, 2)
   correlations <- list(
@@ -113,15 +113,15 @@ test_that("legacy execution-derived multiplicity remains explicit and ineligible
   )
   result <- researchpath_apply_global_multiplicity(
     options, FALSE, which(upper.tri(raw) & is.finite(raw)), raw, 2,
-    correlations, NULL, NULL, "legacy"
+    correlations, NULL, NULL, "inferred"
   )
 
-  expect_identical(result$declarationStatus, "legacy_execution_derived_family")
-  expect_true(result$legacyExecutionDerivedFamily)
-  expect_identical(result$ledger$mode, "legacy_execution_derived_family")
+  expect_identical(result$declarationStatus, "execution_derived_family")
+  expect_true(result$executionDerivedFamily)
+  expect_identical(result$ledger$mode, "execution_derived_family")
 })
 
-test_that("legacy regression pValue is the execution-derived adjusted p with raw preserved", {
+test_that("inferred regression pValue is the execution-derived adjusted p with raw preserved", {
   options <- list(multiplicityPAdjust = "BH", controlVariableIds = character(0))
   regression <- list(blocks = list(
     list(block = 1, coefficients = list(
@@ -135,7 +135,7 @@ test_that("legacy regression pValue is the execution-derived adjusted p with raw
   )
   result <- researchpath_apply_global_multiplicity(
     options, FALSE, integer(0), matrix(NA_real_, 2, 2), 2,
-    correlations, NULL, regression, "legacy"
+    correlations, NULL, regression, "inferred"
   )
   rows <- result$hierarchicalRegression$blocks[[1]]$coefficients
   expected <- stats::p.adjust(c(0.01, 0.02), method = "BH")

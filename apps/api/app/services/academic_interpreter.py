@@ -144,9 +144,9 @@ def generate_interpretation_assets(
         for construct in result.get("validity", {}).get("constructs", []):
             status = construct.get("discriminantValidityStatus")
             if status is None:
-                legacy = construct.get("discriminantValidityPass")
+                fallback = construct.get("discriminantValidityPass")
                 status = (
-                    "pass" if legacy is True else "fail" if legacy is False else "not_evaluable"
+                    "pass" if fallback is True else "fail" if fallback is False else "not_evaluable"
                 )
             tables.append(
                 f"| {construct.get('label', '')} | {f(construct.get('alpha'))} | "

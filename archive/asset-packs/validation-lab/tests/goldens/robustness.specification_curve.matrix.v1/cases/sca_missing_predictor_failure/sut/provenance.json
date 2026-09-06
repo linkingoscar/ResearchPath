@@ -1,8 +1,0 @@
-{
-  "schemaVersion": 1,
-  "generatedAt": "2026-07-27T04:17:54.927603+00:00",
-  "runnerPath": "sut/run.py",
-  "runnerSha256": "539438687b80f3bda3051d4aa16787a5191a0bcc8f7ead480f800e04fc77036c",
-  "manifestSha256": "a3b8ccb27c4c3722827dcde432b8d1929deacb5613606e5cd2d224b33959bde7",
-  "outputSha256": "39373eb0d760d3b595010505ca84681a3ab4360426d9151c559cf91ff3cefe5c"
-}

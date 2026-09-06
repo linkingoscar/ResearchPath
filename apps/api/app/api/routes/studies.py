@@ -203,7 +203,7 @@ def put_study_context(
                 request.context.model_dump(by_alias=True),
                 request.expected_revision,
             )
-        # Compatibility body: the old client did not send expectedRevision.
+        # The whole-document request form saves without a revision precondition.
         return services.dataset_repository.save_study_context(
             project_id, request.model_dump(by_alias=True)
         )
@@ -250,7 +250,7 @@ def put_dataset_structure(
         return services.dataset_repository.save_dataset_structure(
             dataset_id,
             request.model_dump(by_alias=True),
-            allow_legacy_warning_override=False,
+            allow_existing_warning_override=False,
         )
     except DatasetNotFoundError as error:
         raise HTTPException(status_code=404, detail=str(error)) from error

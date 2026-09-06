@@ -18,7 +18,7 @@ bootstrap_ci <- function(values, original_estimate) {
     # Bias-corrected (BC) percentile interval: z0 bias correction ONLY,
     # WITHOUT jackknife acceleration.  This is NOT BCa -- the engine does not
     # implement acceleration anywhere.  BCa intervals in the repository exist
-    # only inside official PROCESS macro oracle reference fixtures (DEBT-148).
+    # only inside official PROCESS macro oracle reference fixtures.
     prop <- sum(valid < original_estimate) / length(valid)
     prop <- max(min(prop, 1 - 1e-12), 1e-12)
     z0 <- qnorm(prop)

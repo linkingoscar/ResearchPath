@@ -1,6 +1,0 @@
-{
-  "within_variance": "non_negative",
-  "between_variance": "non_negative",
-  "total_variance": "non_negative",
-  "se": "non_negative"
-}

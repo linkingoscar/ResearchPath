@@ -1,4 +1,4 @@
-"""R -> Python result normalization (DEBT-003).
+"""R-to-Python result normalization.
 
 Every R result document flows through :func:`normalize_result_document`
 before contract validation, so the four R entrypoints (model analysis, SEM,

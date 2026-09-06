@@ -75,7 +75,7 @@ run_questionnaire_measurement <- function() {
     )
     loading_matrix <- efa_res$loadings
     factor_correlations <- efa_res$factorCorrelations
-    # F-002: parallel analysis runs in the same correlation world as the main
+    # Parallel analysis runs in the same correlation world as the main
     # EFA (polychoric for ordinal items, Pearson for continuous), so ordinal
     # data never silently falls back to a Pearson null distribution.
     parallel_analysis <- if (nrow(item_frame) >= 10 && ncol(item_frame) >= 3) {
@@ -105,7 +105,7 @@ run_questionnaire_measurement <- function() {
       parallelAnalysis = parallel_analysis,
       loadings = lapply(seq_len(nrow(loading_matrix)), function(index) list(itemId = rownames(loading_matrix)[[index]], loadings = as.list(as.numeric(loading_matrix[index, ])))),
       factorCorrelations = mat_to_list(factor_correlations),
-      # F-004: numerical fallbacks surface inside the result document
+      # Numerical fallbacks surface inside the result document
       # (diagnostics.numericalFallbacks), never only in a log line.
       diagnostics = list(
         items = efa_res$diagnostics,

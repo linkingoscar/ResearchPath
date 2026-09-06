@@ -103,7 +103,7 @@ export function mergeEmpiricalServerIndex(
       submittedSpec: null,
       datasetVersionId: run.datasetVersionId,
       measurementVersionId: run.measurementVersionId,
-      runStatus: 'legacy_indexed',
+      runStatus: 'recovered_indexed',
       freshness: existing?.freshness ?? 'current',
       resultId: run.reportId ?? run.resultId ?? existing?.resultId,
       warningCodes: existing?.warningCodes ?? [],

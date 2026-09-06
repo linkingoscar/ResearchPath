@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-from m3_helpers import _model_dataset, client
+from model_test_helpers import _model_dataset, client
 
 
 def _await_empirical_job(response):

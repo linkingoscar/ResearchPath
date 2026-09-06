@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from m3_helpers import _await_analysis, _model_dataset, _spec, client
+from model_test_helpers import _await_analysis, _model_dataset, _spec, client
 
 from app.settings import get_settings
 

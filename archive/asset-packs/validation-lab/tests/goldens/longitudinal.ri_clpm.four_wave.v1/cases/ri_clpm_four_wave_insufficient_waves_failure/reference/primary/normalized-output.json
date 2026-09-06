@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "INSUFFICIENT_WAVES",
-    "message": "Four-wave RI-CLPM requires exactly 4 distinct waves of measurements"
-  }
-}

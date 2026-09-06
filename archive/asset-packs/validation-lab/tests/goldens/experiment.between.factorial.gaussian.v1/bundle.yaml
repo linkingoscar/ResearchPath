@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: experiment.between.factorial.gaussian.v1
-methodFamily: experiment
-cases:
-  - factorial_2x2_balanced
-  - factorial_unbalanced_interaction
-  - factorial_zero_residual
-  - factorial_empty_cell_rank_deficient

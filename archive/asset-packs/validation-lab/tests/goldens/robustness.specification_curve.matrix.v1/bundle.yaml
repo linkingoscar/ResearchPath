@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: robustness.specification_curve.matrix.v1
-methodFamily: robustness
-cases:
-  - sca_multiverse_typical
-  - sca_high_dimensional_complex
-  - sca_single_spec_boundary
-  - sca_missing_predictor_failure

@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: imputation.mice.chain_diagnostics.v1
-methodFamily: imputation
-cases:
-  - mice_stable_chains
-  - mice_multivariate_passive
-  - mice_no_missing_boundary
-  - mice_unsupported_type_failure

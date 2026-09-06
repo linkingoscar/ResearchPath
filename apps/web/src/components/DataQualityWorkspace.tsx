@@ -106,7 +106,7 @@ export function DataQualityWorkspace({ dataset }: DataQualityWorkspaceProps) {
   const duplicateCount = metricNumber(qualityRun ?? undefined, 'duplicates', 'count')
   return (
     <section aria-labelledby="quality-heading" style={{ marginTop: '24px', padding: '18px', border: '1px solid rgba(148, 163, 184, 0.25)', borderRadius: '12px' }}>
-      <p className="eyebrow">WP-QUALITY-01 / WP-QUALITY-02</p>
+      <p className="eyebrow">数据质量</p>
       <h2 id="quality-heading">案例级数据质量与分析样本</h2>
       <p className="muted">质量运行只生成审计指标和标记，不生成未经预注册的单一总分，也不修改原始数据；排除规则会创建不可变 AnalysisSampleVersion。</p>
 
@@ -204,4 +204,3 @@ export function DataQualityWorkspace({ dataset }: DataQualityWorkspaceProps) {
     </section>
   )
 }
-

@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "MISSING_CLUSTER_VARIABLE",
-    "message": "ICC calculation requires at least 2 distinct clusters"
-  }
-}

@@ -20,7 +20,7 @@ const regressionData = (confidenceLevel: number, pValue: number, pValueRaw: numb
   responseSurface: null,
   multiplicity: {
     adjustment: 'BH',
-    familyId: 'legacy',
+    familyId: 'inferred',
     scope: ['test'],
     globalAdjustmentApplied: false,
     components: ['regression'],
@@ -63,7 +63,7 @@ const regressionData = (confidenceLevel: number, pValue: number, pValueRaw: numb
 })
 
 describe('EmpiricalRegressionTab multiplicity and confidence display', () => {
-  it('uses the adjusted p value for stars, not the legacy raw p', () => {
+  it('uses the adjusted p value for stars, not the raw p', () => {
     render(
       <EmpiricalRegressionTab
         activeTab="regression"

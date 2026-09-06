@@ -34,7 +34,7 @@ export interface AnalysisRunIndexEntry {
   submittedSpec: null
   datasetVersionId: string
   measurementVersionId: string | null
-  runStatus: 'legacy_indexed'
+  runStatus: 'recovered_indexed'
   freshness: AnalysisFreshness
   resultId?: string
   warningCodes: string[]
@@ -179,7 +179,7 @@ function saveIndex(projectId: string, index: AnalysisDocumentIndex) {
   }
 }
 
-function legacyHistoryKey(dataset: DatasetVersion, measurement: MeasurementVersion | null): string {
+function runHistoryKey(dataset: DatasetVersion, measurement: MeasurementVersion | null): string {
   return `researchpath.empirical.runs.v1:${dataset.id}:${measurement?.version ?? null}`
 }
 
@@ -319,7 +319,7 @@ export function loadEmpiricalAnalysisIndex(
   measurement: MeasurementVersion | null,
 ): AnalysisDocumentIndex {
   const index = readIndex(dataset.projectId)
-  const history = readEmpiricalHistory(legacyHistoryKey(dataset, measurement))
+  const history = readEmpiricalHistory(runHistoryKey(dataset, measurement))
   let changed = false
 
   history.forEach((entry) => {
@@ -344,7 +344,7 @@ export function loadEmpiricalAnalysisIndex(
         submittedSpec: null,
         datasetVersionId: dataset.id,
         measurementVersionId: measurement?.id ?? null,
-        runStatus: 'legacy_indexed',
+        runStatus: 'recovered_indexed',
         freshness: 'current',
         warningCodes: [],
         createdAt: entry.createdAt,

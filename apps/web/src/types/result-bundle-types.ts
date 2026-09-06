@@ -232,7 +232,7 @@ export interface ResultBundle {
     estimator?: string
     missingMethodExecuted?: string
     bootstrapReplicates?: number
-    /** 仅在 bootstrap 实际执行时有值；否则为 null（DEBT-149） */
+    /** 仅在 bootstrap 实际执行时有值；否则为 null */
     seed?: number | null
     studyPlanBinding?: StudyPlanResultBinding
   }

@@ -69,9 +69,9 @@ export function empiricalDraftStatusForOutput(
     if (scoped) return scoped
   }
 
-  const legacyPendingKey = empiricalDraftKey(dataset, measurement)
-  const legacyPendingDraft = readEmpiricalDraft(legacyPendingKey, procedure)
-  if (legacyPendingDraft && (!latestRunId || legacyPendingDraft.activeRunId === latestRunId)) return toStatus(legacyPendingDraft)
+  const recoveryKey = empiricalDraftKey(dataset, measurement)
+  const recoveredDraft = readEmpiricalDraft(recoveryKey, procedure)
+  if (recoveredDraft && (!latestRunId || recoveredDraft.activeRunId === latestRunId)) return toStatus(recoveredDraft)
 
   return selectDraft(collectDraftCandidates(dataset, measurement, procedure), latestRunId) ?? toStatus(null)
 }

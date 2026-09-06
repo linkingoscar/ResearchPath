@@ -147,8 +147,8 @@ if (!is.finite(process_model_number) && length(m_nodes) == 0 && !is.null(z_node)
     template <- if (identical(b_moderator$role, "z")) "model_22" else "model_59"
   }
 }
-legacy_process_models <- c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 14L, 15L, 21L, 22L, 58L, 59L)
-legacy_mediator_shape <- if (!is.finite(process_model_number)) {
+predefined_process_models <- c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 14L, 15L, 21L, 22L, 58L, 59L)
+predefined_mediator_shape <- if (!is.finite(process_model_number)) {
   FALSE
 } else if (process_model_number < 4L) {
   length(m_nodes) == 0L
@@ -158,7 +158,7 @@ legacy_mediator_shape <- if (!is.finite(process_model_number)) {
   length(m_nodes) == 1L
 }
 generic_process <- is.finite(process_model_number) && (
-  !process_model_number %in% legacy_process_models || !legacy_mediator_shape
+  !process_model_number %in% predefined_process_models || !predefined_mediator_shape
 )
 
 source(file.path(script_dir, "lib", "run_analysis_data.R"), local = environment())

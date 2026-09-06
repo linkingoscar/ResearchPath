@@ -6,7 +6,7 @@ from zipfile import ZipFile
 import numpy as np
 import pandas as pd
 import pytest
-from m3_helpers import _model_dataset, client
+from model_test_helpers import _model_dataset, client
 from test_empirical_center import _await_empirical_job, _fetch_full_report
 
 from app.settings import get_settings

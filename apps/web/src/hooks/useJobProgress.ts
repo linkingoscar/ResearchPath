@@ -43,8 +43,8 @@ export function useJobProgress(runId: string | null, queryKeyPrefix: string[] = 
         try {
           const job = JSON.parse(event.data) as { status?: string }
           // SSE 事件只携带白名单字段；合并保留 GET 查询带来的完整字段（error 文案等）。
-          queryClient.setQueryData(jobKey, (old) => ({ ...(old ?? {}), ...job }))
-          // SSE 再次活跃：fallback 轮询必须停止，同一时刻只允许一个 transport（F-009）。
+          queryClient.setQueryData(jobKey, (current) => ({ ...(current ?? {}), ...job }))
+          // SSE 再次活跃：fallback 轮询必须停止，同一时刻只允许一个 transport。
           stopPolling()
           if (TERMINAL_STATUSES.has(String(job.status))) {
             stop()

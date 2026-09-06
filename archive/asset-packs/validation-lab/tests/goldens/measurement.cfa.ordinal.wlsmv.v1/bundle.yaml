@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: measurement.cfa.ordinal.wlsmv.v1
-methodFamily: measurement
-cases:
-  - cfa_ordinal_wlsmv_typical
-  - cfa_ordinal_wlsmv_skewed_binary
-  - cfa_ordinal_wlsmv_extreme_category_boundary
-  - cfa_ordinal_wlsmv_zero_variance_failure

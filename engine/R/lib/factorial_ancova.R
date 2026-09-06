@@ -1,4 +1,4 @@
-# ResearchPath R Engine - Factorial ANCOVA & Planned Contrasts (WP-EXP-02)
+# ResearchPath R Engine - Factorial ANCOVA & Planned Contrasts
 
 run_planned_contrasts <- function(data, dv, group_var, contrast_weights = NULL, confidence_level = 0.95) {
   confidence_level <- researchpath_validate_confidence_level(confidence_level)
@@ -105,7 +105,7 @@ test_homogeneity_of_slopes <- function(data, dv, group_var, covariate) {
 }
 
 # ---------------------------------------------------------------------------
-# Between Factorial ANOVA / ANCOVA Execution (WP-CORE-E-02)
+# Between Factorial ANOVA / ANCOVA Execution
 # ---------------------------------------------------------------------------
 
 fit_factorial_ancova <- function(data, outcome, between_factors, covariates = NULL, sum_of_squares = "III", confidence_level = 0.95) {

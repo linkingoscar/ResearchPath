@@ -45,7 +45,7 @@ def test_unknown_or_harness_change_fails_safe_to_full() -> None:
 
 def test_decode_git_paths_handles_raw_unicode_and_special_names() -> None:
     raw = (
-        "docs/09-修改日志.md".encode("utf-8")
+        "docs/04-工程开发与验证.md".encode("utf-8")
         + b"\0"
         + "docs/带 空格 的 报告.md".encode("utf-8")
         + b"\0"
@@ -55,7 +55,7 @@ def test_decode_git_paths_handles_raw_unicode_and_special_names() -> None:
         + b"\0"
     )
     assert MODULE.decode_git_paths(raw) == [
-        "docs/09-修改日志.md",
+        "docs/04-工程开发与验证.md",
         "docs/带 空格 的 报告.md",
         "docs/back\\slash.md",
         'docs/"quoted".md',
@@ -63,8 +63,8 @@ def test_decode_git_paths_handles_raw_unicode_and_special_names() -> None:
 
 
 def test_decode_git_paths_falls_back_to_c_style_quoted_octal_escapes() -> None:
-    raw = b'"docs/09-\\344\\277\\256\\346\\224\\271\\346\\227\\245\\345\\277\\227.md"\0'
-    assert MODULE.decode_git_paths(raw) == ["docs/09-修改日志.md"]
+    raw = b'"docs/\\346\\226\\207\\346\\241\\243.md"\0'
+    assert MODULE.decode_git_paths(raw) == ["docs/文档.md"]
 
 
 def test_discover_changed_files_decodes_unicode_paths_in_real_git_worktree(
@@ -78,14 +78,14 @@ def test_discover_changed_files_decodes_unicode_paths_in_real_git_worktree(
         subprocess.run(command, cwd=tmp_path, check=True)
     docs = tmp_path / "docs"
     docs.mkdir()
-    changed = docs / "09-修改日志.md"
+    changed = docs / "04-工程开发与验证.md"
     changed.write_text("line 1\n", encoding="utf-8")
     subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
     subprocess.run(["git", "commit", "-qm", "init"], cwd=tmp_path, check=True)
     changed.write_text("line 1\nline 2\n", encoding="utf-8")
 
     files = MODULE.discover_changed_files(tmp_path, "HEAD")
-    assert "docs/09-修改日志.md" in files
+    assert "docs/04-工程开发与验证.md" in files
     assert not any(path.startswith('"') for path in files)
 
     plan = MODULE.resolve(files, MAPPING)

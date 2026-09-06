@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-from m3_helpers import client
+from model_test_helpers import client
 
 
 def _reference_bh_adjust(values: list[float]) -> list[float]:

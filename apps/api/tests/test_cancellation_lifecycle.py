@@ -4,7 +4,7 @@ import json
 import time
 from dataclasses import replace
 
-import m3_helpers
+import model_test_helpers
 import pytest
 from starlette.testclient import TestClient
 
@@ -21,7 +21,7 @@ def test_repeated_bootstrap_cancellation_under_load(tmp_path, monkeypatch, compe
     app = create_app(settings)
     services = app.state.services
     api = TestClient(app, headers={"X-ResearchPath-Token": settings.session_token})
-    monkeypatch.setattr(m3_helpers, "client", api)
+    monkeypatch.setattr(model_test_helpers, "client", api)
     run_ids: list[str] = []
     timings: list[float] = []
 
@@ -36,8 +36,8 @@ def test_repeated_bootstrap_cancellation_under_load(tmp_path, monkeypatch, compe
         pytest.fail(f"Task did not reach expected state: {state}")
 
     try:
-        dataset, measurement = m3_helpers._model_dataset(row_count=120)
-        model = m3_helpers._spec("model_7", dataset, measurement)
+        dataset, measurement = model_test_helpers._model_dataset(row_count=120)
+        model = model_test_helpers._spec("model_7", dataset, measurement)
         model["estimation"]["bootstrap"]["replicates"] = 50000
         frozen = api.post(
             f"/api/v1/datasets/{dataset['id']}/models/{model['modelId']}/freeze",

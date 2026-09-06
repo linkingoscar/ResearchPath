@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: experiment.randomization.inference.v1
-methodFamily: experiment
-cases:
-- randomization_inference_exact
-- randomization_inference_stratified
-- randomization_inference_zero_diff
-- randomization_inference_mismatched_assignment

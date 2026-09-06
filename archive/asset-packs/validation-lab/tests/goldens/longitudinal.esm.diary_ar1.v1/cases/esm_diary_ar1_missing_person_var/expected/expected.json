@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "MISSING_PERSON_VARIABLE",
-    "message": "ESM diary AR(1) model requires at least 2 distinct subjects"
-  }
-}

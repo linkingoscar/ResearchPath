@@ -24,9 +24,6 @@ $declaredPaths = @(
     $manifest.frontendModules.types
     $manifest.contracts.path
     $governancePaths
-    $manifest.assetPacks.path
-    $manifest.assetPacks.restoreGuide
-    $manifest.restoredAssetSlices.activePaths
     $commandPaths
 ) | Sort-Object -Unique
 
@@ -48,13 +45,6 @@ foreach ($name in $forbiddenGenerated) {
     if (Test-Path -LiteralPath (Join-Path $root $name)) {
         throw "Generated directory must not remain in the repository root: $name"
     }
-}
-
-# docs/09-修改日志.md must stay append-only above the frozen-history marker and
-# its historical region must match the pinned digest.
-& (Join-Path $root '.venv\Scripts\python.exe') (Join-Path $PSScriptRoot 'check_changelog_governance.py')
-if ($LASTEXITCODE -ne 0) {
-    throw 'Changelog governance check failed.'
 }
 
 # Physical line counts (blank lines included) via the Python helper so the

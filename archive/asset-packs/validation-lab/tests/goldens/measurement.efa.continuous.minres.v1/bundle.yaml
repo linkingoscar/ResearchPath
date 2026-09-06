@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: measurement.efa.continuous.minres.v1
-methodFamily: measurement
-cases:
-  - efa_continuous_minres_typical
-  - efa_continuous_minres_four_factor
-  - efa_continuous_minres_high_correlation_boundary
-  - efa_continuous_minres_insufficient_items_failure

@@ -247,10 +247,8 @@ def _migration_004_protocols_and_programs(connection: sqlite3.Connection) -> Non
 
 
 def _migration_005_r1_quality_and_protocol_identity(connection: sqlite3.Connection) -> None:
-    # The original R1 migration keyed protocols only by study/version.  That
-    # allowed two programs to silently overwrite each other's draft.  Rebuild
-    # the small table with the program in the identity key before adding the
-    # quality/sample lineage tables.
+    # Include the program in protocol identity before adding quality and
+    # sample-lineage tables.
     connection.execute(
         """
         CREATE TABLE study_protocols_v2 (
@@ -398,21 +396,13 @@ def _migration_006_study_context_and_dataset_structure(connection: sqlite3.Conne
 
 
 def _migration_008_nullable_imputation_structure(connection: sqlite3.Connection) -> None:
-    """Repair databases created with the original migration 007 schema.
-
-    Migration 007 was later corrected to allow an independent cross-sectional
-    imputation plan to omit a fabricated structure version.  Existing
-    workspaces have already recorded version 007, so the corrected CREATE
-    TABLE definition alone cannot repair them; this forward migration applies
-    the safe SQLite table rebuild to those workspaces and is a no-op for new
-    databases.
-    """
+    """Allow independent cross-sectional plans to omit a structure version."""
 
     _ensure_nullable_imputation_structure(connection)
 
 
 def _migration_009_dataset_scoped_analysis_snapshots(connection: sqlite3.Connection) -> None:
-    """Repair the pre-009 global context-snapshot uniqueness constraint."""
+    """Scope analysis snapshots to their dataset version."""
 
     _ensure_dataset_scoped_analysis_snapshots(connection)
 

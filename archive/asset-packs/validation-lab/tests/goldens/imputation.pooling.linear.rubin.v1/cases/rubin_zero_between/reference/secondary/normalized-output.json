@@ -1,9 +1,0 @@
-{
-  "pooled_estimate": 2.0,
-  "within_variance": 0.05,
-  "between_variance": 0.0,
-  "total_variance": 0.05,
-  "se": 0.22360679774997896,
-  "relative_increase_variance": 0.0,
-  "df": 98.05825242718447
-}

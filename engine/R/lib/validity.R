@@ -352,7 +352,7 @@ calc_structural_missingness <- function(df, constructs_metadata) {
 }
 
 # ---------------------------------------------------------------------------
-# Correlation CIs & Partial Correlations (WP-CORE-Q-05)
+# Correlation CIs & Partial Correlations
 # ---------------------------------------------------------------------------
 
 calc_correlation_ci <- function(r, n, confidence_level = 0.95) {

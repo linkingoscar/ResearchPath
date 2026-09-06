@@ -191,7 +191,7 @@ researchpath_process_provenance <- function(spec, payload, hc3_unavailable_warni
     jsonliteVersion = as.character(packageVersion("jsonlite")), dataSha256 = payload$dataSha256,
     standardErrors = spec$estimation$standardErrors, confidenceLevel = spec$estimation$confidenceLevel,
     # HC3 is never silently replaced by classical covariance.  Keep the
-    # legacy field false for compatibility; warnings and CI methods disclose
+    # Compatibility field remains false; warnings and CI methods disclose
     # HC3_UNAVAILABLE when applicable.
     hc3FallbackApplied = FALSE,
     bootstrapReplicates = if (isTRUE(bootstrap_config$enabled)) replicates else 0L,

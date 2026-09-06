@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: measurement.bifactor.continuous.v1
-methodFamily: measurement
-cases:
-  - bifactor_continuous_typical
-  - bifactor_continuous_three_specific
-  - bifactor_continuous_dominant_general_boundary
-  - bifactor_continuous_underidentified_failure

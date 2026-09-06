@@ -75,8 +75,8 @@ class StudyPlanMultiplicityFamily(ContractBaseModel):
     @model_validator(mode="after")
     def validate_declaration_shape(self) -> "StudyPlanMultiplicityFamily":
         modern = bool(self.member_estimand_ids)
-        legacy = self.member_type is not None or bool(self.member_ids)
-        if modern and legacy:
+        compact = self.member_type is not None or bool(self.member_ids)
+        if modern and compact:
             raise ValueError("MULTIPLICITY_FAMILY_SHAPE_AMBIGUOUS: 不得同时使用 memberEstimandIds 与 memberType/memberIds")
         if modern and self.role is None:
             raise ValueError("MULTIPLICITY_FAMILY_ROLE_REQUIRED: declaration-driven family 必须声明 role")

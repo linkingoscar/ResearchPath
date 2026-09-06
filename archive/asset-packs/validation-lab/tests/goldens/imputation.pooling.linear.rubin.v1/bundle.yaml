@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: imputation.pooling.linear.rubin.v1
-methodFamily: imputation
-cases:
-- rubin_standard
-- rubin_unequal_within
-- rubin_zero_between
-- rubin_invalid_m

@@ -166,7 +166,7 @@ researchpath_apply_global_multiplicity <- function(
   fallback_adjustment <- if (!is.null(options$multiplicityPAdjust) && options$multiplicityPAdjust %in% c("none", "holm", "BH")) options$multiplicityPAdjust else "BH"
   declaration <- researchpath_normalize_multiplicity_declaration(study_plan_multiplicity, fallback_adjustment)
   typed <- isTRUE(declaration$typed)
-  legacy <- !typed
+  execution_derived <- !typed
   control_ids <- researchpath_as_character_ids(options$controlVariableIds)
   correlation_ids <- if (is.list(correlations$variables)) {
     vapply(correlations$variables, function(variable) as.character(variable$id), character(1))
@@ -222,9 +222,9 @@ researchpath_apply_global_multiplicity <- function(
 
   family_lookup <- list()
   for (family in declaration$families) family_lookup[[family$id]] <- family
-  if (legacy) {
+  if (execution_derived) {
     family_lookup[[multiplicity_family_id]] <- list(
-      id = multiplicity_family_id, label = "legacy execution-derived family", role = "legacy",
+      id = multiplicity_family_id, label = "execution-derived family", role = "inferred",
       adjustment = fallback_adjustment, estimandIds = character(0)
     )
   }
@@ -249,7 +249,7 @@ researchpath_apply_global_multiplicity <- function(
       }
     } else {
       observation$familyId <- multiplicity_family_id
-      observation$declarationStatus <- "legacy_execution_derived_family"
+      observation$declarationStatus <- "execution_derived_family"
       observation$dedupeKey <- if (is.null(observation$estimandId)) {
         paste(observation$component, observation$key, sep = ":")
       } else {
@@ -340,9 +340,9 @@ researchpath_apply_global_multiplicity <- function(
     correlations$globalPValuesRaw <- lapply(seq_len(correlation_count), function(i) as.list(global_raw_matrix[i, ]))
     correlations$globalPValues <- lapply(seq_len(correlation_count), function(i) as.list(global_matrix[i, ]))
     correlations$declaredMultiplicityFamilyIds <- lapply(seq_len(correlation_count), function(i) as.list(family_matrix[i, ]))
-    correlations$multiplicity$declarationMode <- if (typed) "typed" else "legacy_execution_derived_family"
+    correlations$multiplicity$declarationMode <- if (typed) "typed" else "execution_derived_family"
     correlations$multiplicity$declaredFamilyLedger <- family_ledger
-    correlations$multiplicity$legacyExecutionDerivedFamily <- legacy
+    correlations$multiplicity$executionDerivedFamily <- execution_derived
     if (typed) correlations$multiplicity$familyId <- if (length(family_ledger) == 1L) family_ledger[[1]]$id else "declared"
     correlations$multiplicity$globalFamilySize <- as.integer(sum(vapply(family_ledger, function(record) record$declaredFamilySize, integer(1))))
     correlations$multiplicity$globalAdjustment <- if (typed) "declared" else fallback_adjustment
@@ -363,10 +363,10 @@ researchpath_apply_global_multiplicity <- function(
       pre_component_family <- row$multiplicityFamilyId
       if (is.finite(adjusted)) {
         # Components that already completed their own within-component family
-        # adjustment (e.g. legacy group comparison across constructs) keep
+        # adjustment (for example, group comparison across constructs) keeps
         # that component p value; the cross-component global adjustment is
         # recorded in the global* fields. Components without a component
-        # adjustment (e.g. legacy regression rows) display the global
+        # adjustment (for example, regression rows) displays the global
         # multiplicity-adjusted p value and keep the raw value in pValueRaw.
         if (typed || is.null(pre_adjusted)) {
           row$pValueAdjusted <- adjusted
@@ -394,9 +394,9 @@ researchpath_apply_global_multiplicity <- function(
     for (index in seq_along(group_comparison$results)) {
       group_comparison$results[[index]] <- decorate_row(group_comparison$results[[index]], "group", group_comparison$results[[index]]$id)
     }
-    group_comparison$multiplicity$declarationMode <- if (typed) "typed" else "legacy_execution_derived_family"
+    group_comparison$multiplicity$declarationMode <- if (typed) "typed" else "execution_derived_family"
     group_comparison$multiplicity$declaredFamilyLedger <- family_ledger
-    group_comparison$multiplicity$legacyExecutionDerivedFamily <- legacy
+    group_comparison$multiplicity$executionDerivedFamily <- execution_derived
     group_comparison$multiplicity$globalAdjustmentApplied <- any(vapply(observations, function(observation) identical(observation$component, "group") && is.finite(adjusted_for_observation(observation)), logical(1)))
   }
 
@@ -409,7 +409,7 @@ researchpath_apply_global_multiplicity <- function(
         if (identical(term, "(Intercept)")) next
         if (researchpath_is_adjustment_covariate(term, options)) {
           coefficient$analysisRole <- "adjustment_covariate"
-          coefficient$declarationStatus <- if (typed) "excluded_adjustment_covariate" else "legacy_excluded_adjustment_covariate"
+          coefficient$declarationStatus <- if (typed) "excluded_adjustment_covariate" else "inferred_excluded_adjustment_covariate"
           block$coefficients[[coefficient_index]] <- coefficient
           next
         }
@@ -420,9 +420,9 @@ researchpath_apply_global_multiplicity <- function(
     hierarchical_regression$multiplicityFamilyId <- if (typed) "declared" else multiplicity_family_id
     hierarchical_regression$multiplicityFamilySize <- as.integer(sum(vapply(family_ledger, function(record) record$declaredFamilySize, integer(1))))
     hierarchical_regression$multiplicity <- list(
-      declarationMode = if (typed) "typed" else "legacy_execution_derived_family",
+      declarationMode = if (typed) "typed" else "execution_derived_family",
       declaredFamilyLedger = family_ledger,
-      legacyExecutionDerivedFamily = legacy
+      executionDerivedFamily = execution_derived
     )
   }
 
@@ -448,8 +448,8 @@ researchpath_apply_global_multiplicity <- function(
     adjustment = if (typed) "declared" else fallback_adjustment,
     familySize = as.integer(sum(vapply(family_ledger, function(record) record$declaredFamilySize, integer(1)))),
     applied = any(vapply(observations, function(observation) is.finite(adjusted_for_observation(observation)), logical(1))),
-    declarationStatus = if (typed) "typed" else "legacy_execution_derived_family",
-    legacyExecutionDerivedFamily = legacy,
+    declarationStatus = if (typed) "typed" else "execution_derived_family",
+    executionDerivedFamily = execution_derived,
     incompletePrimaryFamilyIds = as.list(incomplete_primary_family_ids),
     primaryFamilyIncomplete = length(incomplete_primary_family_ids) > 0L,
     requiresManualReview = length(incomplete_primary_family_ids) > 0L,
@@ -460,7 +460,7 @@ researchpath_apply_global_multiplicity <- function(
     unmappedResultKeys = as.list(vapply(unmapped, function(observation) paste(observation$component, observation$key, sep = ":"), character(1))),
     missingDeclaredEstimandIds = as.list(missing_declared_estimand_ids),
     ledger = list(
-      mode = if (typed) "typed" else "legacy_execution_derived_family",
+      mode = if (typed) "typed" else "execution_derived_family",
       families = family_ledger, results = ledger_results
     )
   )

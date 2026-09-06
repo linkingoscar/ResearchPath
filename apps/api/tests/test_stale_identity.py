@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from m3_helpers import client
+from model_test_helpers import client
 
 from app.main import app
 

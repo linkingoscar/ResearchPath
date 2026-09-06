@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: longitudinal.esm.diary_ar1.v1
-methodFamily: longitudinal
-cases:
-  - esm_diary_ar1_typical
-  - esm_diary_ar1_missing_prompts
-  - esm_diary_ar1_zero_phi_boundary
-  - esm_diary_ar1_missing_person_var

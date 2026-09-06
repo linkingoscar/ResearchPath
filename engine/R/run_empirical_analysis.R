@@ -463,7 +463,7 @@ result <- list(
     globalAdjustmentApplied = global_multiplicity$applied,
     components = as.list(c("correlations", "group_comparison", "hierarchical_regression")),
     declarationStatus = global_multiplicity$declarationStatus,
-    legacyExecutionDerivedFamily = global_multiplicity$legacyExecutionDerivedFamily,
+    executionDerivedFamily = global_multiplicity$executionDerivedFamily,
     declaredFamilySize = global_multiplicity$familySize,
     declaredFamilyLedger = global_multiplicity$ledger$families,
     resultLedger = global_multiplicity$ledger$results,
@@ -474,7 +474,7 @@ result <- list(
     hypothesisBoundary = if (identical(global_multiplicity$declarationStatus, "typed")) {
       "只有能映射到冻结声明 estimand 的 primary/exploratory 结果进入 declared multiplicity family；adjustment_covariate 与未声明诊断不进入 family，模型画布上的具名假设由 Evidence Graph 单独绑定。"
     } else {
-      "旧兼容路径按已执行结果构造 legacy family，仅用于兼容读取；它不表达冻结的 primary/exploratory intent，且不得达到 publication-ready。"
+      "未提供预声明时按已执行结果构造推断族；它不表达冻结的 primary/exploratory intent，且不得达到 publication-ready。"
     }
   ),
   commonMethodBias = common_method, factorability = factorability,
@@ -493,7 +493,7 @@ result <- list(
   warnings = warnings,
   provenance = list(
     procedure = procedure,
-    requestedProcedures = if (is.null(procedure)) "legacy_bundle" else procedure,
+    requestedProcedures = if (is.null(procedure)) "combined_bundle" else procedure,
     dependencies = if (identical(procedure, "validity")) list("cfa") else if (identical(procedure, "relative_importance")) list("regression") else list(),
     engine = "ResearchPath empirical base-R engine", engineVersion = "1.0.0",
     rVersion = R.version.string, jsonliteVersion = as.character(packageVersion("jsonlite")),

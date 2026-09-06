@@ -1,6 +1,6 @@
 import type { StatisticalMethodExecution } from './datasets'
 
-// F-004: machine-readable disclosure of any numerical fallback that changes
+// Machine-readable disclosure of any numerical fallback that changes
 // the meaning of an EFA estimator (inversion, communality init, rotation,
 // extraction, correlation world).
 export interface EfaNumericalFallback {
@@ -10,7 +10,7 @@ export interface EfaNumericalFallback {
   reason: string
 }
 
-// F-002: parallel analysis metadata. The correlationType/simulationType pair
+// Parallel analysis metadata. The correlationType/simulationType pair
 // proves the null distribution lived in the same statistical world as the
 // main EFA (ordinal data never silently degrades to Pearson).
 export interface EfaParallelAnalysis {
@@ -26,7 +26,7 @@ export interface EfaParallelAnalysis {
   simulationType?: 'continuous_pearson' | 'ordinal_threshold_preserving'
 }
 
-// F-003: split-sample validation reuses the user's estimator pipeline, or
+// Split-sample validation reuses the user's estimator pipeline, or
 // reports unavailable instead of silently switching estimators.
 export interface EfaSplitValidation {
   available: boolean

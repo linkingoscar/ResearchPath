@@ -1,7 +1,7 @@
 run_map_test <- function(R) {
   # MAP cannot be computed without a positive-definite correlation matrix.
   # Returning a numeric recommendation in that state would silently turn
-  # "unavailable" into "1 factor" (F-001). State the status explicitly.
+  # "unavailable" into "1 factor". State the status explicitly.
   p <- ncol(R)
   if (is.null(p) || p <= 2) {
     return(list(

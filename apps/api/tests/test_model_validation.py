@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from m3_helpers import _model_dataset, _spec, client
+from model_test_helpers import _model_dataset, _spec, client
 
 from app.services import model_service
 from app.services.dataset_repository import DatasetRepository

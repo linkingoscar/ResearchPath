@@ -4,7 +4,7 @@ import { buildWorkspaceSteps } from './workspaceStateSelectors'
 import { normalizeStoredWorkspaceView } from './workspaceStateStorage'
 
 describe('workspace navigation reorganization', () => {
-  it('migrates legacy analysis views to the unified analysis workspace', () => {
+  it('normalizes stored analysis views to the unified analysis workspace', () => {
     expect(normalizeStoredWorkspaceView('empirical')).toBe('analyze')
     expect(normalizeStoredWorkspaceView('model')).toBe('analyze')
     expect(normalizeStoredWorkspaceView('methods')).toBe('analyze')

@@ -1,4 +1,4 @@
-# R module for Measurement Invariance (WP-MEASURE-04)
+# R module for Measurement Invariance
 
 invariance_model_availability <- function(model_metrics) {
   labels <- c("configural", "metric", "scalar", "strict")

@@ -1,4 +1,4 @@
-name: ResearchPath quality gate
+name: ResearchPath checks
 
 on:
   push:
@@ -8,14 +8,14 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: quality-${{ github.workflow }}-${{ github.ref }}
+  group: checks-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  quality:
+  check:
     runs-on: windows-latest
     timeout-minutes: 60
     env:
@@ -23,7 +23,7 @@ jobs:
       PYTHONUTF8: "1"
 
     steps:
-      - name: Check out audited source
+      - name: Check out source
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           persist-credentials: false
@@ -41,87 +41,47 @@ jobs:
           node-version: "24"
           cache: npm
 
-      - name: Restore local R runtime and library
-        id: r_runtime_cache
-        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+      - name: Prepare Quick dependencies
+        if: github.event_name != 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          python -m venv .venv
+          ./.venv/Scripts/python.exe -m pip install --require-hashes -r apps/api/requirements.lock
+          npm ci
+
+      - name: Run Quick checks
+        if: github.event_name != 'workflow_dispatch'
+        shell: pwsh
+        run: ./scripts/harness.ps1 -Mode Quick
+
+      - name: Restore R runtime and library
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: |
             .runtime/R
             .runtime/R-library
             .runtime/renv-bootstrap-library
-          key: windows-r-4.6.1-abi3-${{ hashFiles('renv.lock') }}
-          restore-keys: |
-            windows-r-4.6.1-abi2-${{ hashFiles('renv.lock') }}
-            windows-r-4.6.1-${{ hashFiles('renv.lock') }}
-            windows-r-4.6.1-
+          key: windows-r-4.6.1-${{ hashFiles('renv.lock') }}
 
       - name: Restore Rtools toolchain
-        id: rtools_cache
-        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: C:\rtools45
           key: windows-rtools45-${{ hashFiles('.github/rtools45-cache-key.txt') }}
 
-      - name: Install strictly locked dependencies
+      - name: Prepare Full dependencies
+        if: github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: ./scripts/setup.ps1
 
-      # Save cold-start artifacts before the quality gate. A later test failure
-      # must not discard a successful 25+ minute R/Rtools bootstrap and force
-      # the next diagnostic run to repeat it from scratch.
-      - name: Save local R runtime and library
-        if: steps.r_runtime_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
-        with:
-          path: |
-            .runtime/R
-            .runtime/R-library
-            .runtime/renv-bootstrap-library
-          key: ${{ steps.r_runtime_cache.outputs.cache-primary-key }}
-
-      - name: Save Rtools toolchain
-        if: steps.rtools_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
-        with:
-          path: C:\rtools45
-          key: ${{ steps.rtools_cache.outputs.cache-primary-key }}
-
-      # The upstream data host currently presents a certificate-name mismatch
-      # to GitHub's Windows runner. Keep the network-dependent oracle lane
-      # explicit and manual; push/PR quality must reach the repository tests
-      # instead of failing before them because of a third-party TLS outage.
-      # The fetch remains SHA-256 pinned and fails loudly when manually run.
-      - name: Fetch public validation data pack (SHA-256 pinned)
+      - name: Run Full checks
         if: github.event_name == 'workflow_dispatch'
         shell: pwsh
-        run: ./scripts/fetch-public-validation-data.ps1
+        run: ./scripts/harness.ps1 -Mode Full
 
-      - name: Run architecture, contracts, types, statistics and builds
-        shell: pwsh
-        run: ./scripts/test.ps1
-
-      - name: Audit Python and Node dependencies
+      - name: Audit dependencies
+        if: github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: ./scripts/audit-dependencies.ps1
-
-      - name: Generate machine-readable build evidence
-        if: success()
-        shell: pwsh
-        run: >-
-          ./.venv/Scripts/python.exe scripts/release-evidence.py
-          --test-status passed --mode Full --run-id "${{ github.run_id }}"
-          --required-step quality-gate --required-step dependency-audit
-          --completed-step quality-gate --completed-step dependency-audit
-          --output output/release/ci-evidence.json
-
-      - name: Upload quality evidence
-        if: success()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: researchpath-quality-evidence-${{ github.run_id }}
-          path: |
-            output/release/ci-evidence.json
-            output/performance/r-runtime-baseline.json
-            specs/openapi.json
-          if-no-files-found: error
-          retention-days: 30

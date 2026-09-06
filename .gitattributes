@@ -1,7 +1,5 @@
 specs/openapi.json text eol=lf
 apps/web/src/types/generated-api.ts text eol=lf
-docs/debt-register.json text eol=lf
-docs/09-修改日志.md text eol=lf
 tests/goldens/** text eol=lf
 tests/goldens/equivalence.tost.two_sample.v1/cases/tost_two_sample_equivalence/data/input.csv text eol=crlf
 tests/goldens/equivalence.tost.two_sample.v1/cases/tost_two_sample_equivalence/data/source.json text eol=crlf

@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "INSUFFICIENT_ITEMS",
-    "message": "EFA model requires more items than factors (2 items for 2 factors is underidentified)"
-  }
-}

@@ -35,11 +35,11 @@ def count_explicit_any_usages() -> tuple[int, dict[str, int]]:
 
 
 def run_pyright() -> tuple[dict[str, int], dict[str, Any]]:
-    executable = shutil.which("npx")
+    executable = shutil.which("pyright")
     if executable is None:
-        raise RuntimeError("npx is required to run the pinned Pyright checker")
+        raise RuntimeError("Install dependencies before running the pinned Pyright checker")
     process = subprocess.run(
-        [executable, "pyright", "--outputjson"],
+        [executable, "--outputjson"],
         cwd=ROOT,
         check=False,
         capture_output=True,

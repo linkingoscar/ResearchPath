@@ -1,8 +1,0 @@
-{
-  "data/input.csv": "0c90c5a1e26ed25ec426276c19fbf6231759e988cc152f9249c7854685295864",
-  "expected/expected.json": "cb4992ba46e555c8324c3a41959244e78e89adb2b34a90fd2575d1a7231f65fe",
-  "reference/primary/normalized-output.json": "8da2bf46fac24a877f2e0340ea6f291749f1939d61f4a49ca2f602437fb9398e",
-  "reference\\primary\\run.py": "00fd60cb2ed942a128725500c28b6ce3160463261f9bb456c0d154314f2f0933",
-  "reference\\primary\\session-info.txt": "444f1ee0033eb244eedebc0ad3faa0278d7a457afdacdb6b88de36a97c5f39fd",
-  "spec/analysis-spec.json": "47dc4b2fb2dc2240d5992db7fae157356e18885257f030fbf66b02430ca068f5"
-}

@@ -269,7 +269,7 @@ export function App() {
                     ) : null}
                   </div>
                   <EmpiricalAnalysis
-                    key={`${activeDataset.id}:${activeDataset.dictionary.version}:${modelContext?.measurement.version ?? 'raw'}:${resolvedContext.contextHash}:${activeAnalysisId ?? 'legacy'}:${activeRunRequestId ?? 'current'}`}
+                    key={`${activeDataset.id}:${activeDataset.dictionary.version}:${modelContext?.measurement.version ?? 'raw'}:${resolvedContext.contextHash}:${activeAnalysisId ?? 'unscoped'}:${activeRunRequestId ?? 'current'}`}
                     dataset={activeDataset}
                     measurement={modelContext?.measurement ?? null}
                     researchParadigm={researchParadigm}

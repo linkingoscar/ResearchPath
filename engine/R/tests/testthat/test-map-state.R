@@ -1,4 +1,4 @@
-# MAP test state contract (F-001): "unavailable" must never be reported as
+# MAP test state contract: "unavailable" must never be reported as
 # a numeric factor recommendation.
 
 source_engine("lib/efa.R")

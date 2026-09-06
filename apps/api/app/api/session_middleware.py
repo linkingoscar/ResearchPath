@@ -9,9 +9,8 @@ from fastapi.responses import JSONResponse
 from app.error_handlers import structured_error
 from app.settings import Settings
 
-# Only these exact public GET endpoints stay open. There is deliberately no
-# "/api/v1/session" route: the old ghost allowlist entry made an impossible
-# path look intentional. Demo data files use the exact route shape below;
+# Only these exact public GET endpoints stay open. There is no public
+# "/api/v1/session" route. Demo data files use the exact route shape below;
 # prefix matching alone would also expose future "/demo-*" routes.
 _PUBLIC_GET_PATHS = frozenset(
     {

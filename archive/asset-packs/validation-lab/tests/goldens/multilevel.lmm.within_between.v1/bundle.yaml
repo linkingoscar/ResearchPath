@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: multilevel.lmm.within_between.v1
-methodFamily: multilevel
-cases:
-  - lmm_group_mean_centering
-  - lmm_within_between_unbalanced
-  - lmm_within_between_zero_within_var
-  - lmm_within_between_missing_cluster_id

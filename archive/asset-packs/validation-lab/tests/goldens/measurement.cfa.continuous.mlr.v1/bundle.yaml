@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: measurement.cfa.continuous.mlr.v1
-methodFamily: measurement
-cases:
-  - cfa_continuous_mlr_typical
-  - cfa_continuous_mlr_three_factor_fiml
-  - cfa_continuous_mlr_collinear_boundary
-  - cfa_continuous_mlr_underidentified_failure

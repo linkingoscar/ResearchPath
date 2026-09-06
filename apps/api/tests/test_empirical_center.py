@@ -13,7 +13,7 @@ from _empirical_center_helpers import (
     _reference_bh_adjust,
     _reference_holm_adjust,
 )
-from m3_helpers import _model_dataset, client
+from model_test_helpers import _model_dataset, client
 
 from app.settings import get_settings
 

@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "ZERO_VARIANCE_INDICATOR",
-    "message": "Item 'x1' has zero variance (only 1 category observed)"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "UNSUPPORTED_VARIABLE_TYPE",
-    "message": "Column x1 contains non-numeric text values unsupported by PMM"
-  }
-}

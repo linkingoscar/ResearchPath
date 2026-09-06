@@ -1,9 +1,0 @@
-{
-  "ate": 4.6,
-  "permutation_count": 70,
-  "p_value_two_sided": 0.0285714285714286,
-  "p_value_one_sided": 0.0142857142857143,
-  "diagnostics": {
-    "converged": true
-  }
-}

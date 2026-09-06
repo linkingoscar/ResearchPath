@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-from m3_helpers import _model_dataset, _spec
+from model_test_helpers import _model_dataset, _spec
 from starlette.testclient import TestClient
 from study_plan_test_helpers import typed_plan_payload
 
@@ -111,11 +111,11 @@ def test_v1_study_plan_migrates_to_draft_and_requires_explicit_v2_freeze() -> No
         "alternative": "two_sided",
         "roundingRule": "ceil",
     }
-    legacy = client.post(
+    version_one = client.post(
         f"/api/v1/projects/{project_id}/study-plans",
         json={
             "payload": {
-                "title": "Legacy plan",
+                "title": "Version one plan",
                 "researchQuestion": "How large should the study be for the planned analysis?",
                 "estimand": "R2 change",
                 "context": context,
@@ -131,8 +131,8 @@ def test_v1_study_plan_migrates_to_draft_and_requires_explicit_v2_freeze() -> No
             }
         },
     )
-    assert legacy.status_code == 201, legacy.text
-    migrated = legacy.json()
+    assert version_one.status_code == 201, version_one.text
+    migrated = version_one.json()
     assert migrated["schemaVersion"] == "2.0.0"
     assert migrated["status"] == "draft"
     assert migrated["migration"] == {"fromSchemaVersion": "1.0.0", "mode": "automatic_draft"}

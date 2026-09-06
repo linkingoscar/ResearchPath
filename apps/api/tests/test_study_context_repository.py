@@ -17,7 +17,7 @@ def _repository(tmp_path: Path) -> DatasetRepository:
 
 
 class LegacyOnlyStudyContextRepository(StudyContextRepositoryMixin):
-    """Exercises the legacy mixin without the newer MRO overrides."""
+    """Exercises the base mixin without repository MRO overrides."""
 
     def __init__(self, backing: DatasetRepository) -> None:
         self.settings: Settings = backing.settings

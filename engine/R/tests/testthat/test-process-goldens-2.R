@@ -1,4 +1,4 @@
-# Golden-standard tests (part 2): legacy PROCESS templates 5/15/21/22/58/59
+# Golden-standard tests (part 2): predefined PROCESS templates 5/15/21/22/58/59
 # against the OFFICIAL PROCESS 5.0 macro on deterministic synthetic data.
 #
 # Frozen values live in engine/R/tests/reference/process-goldens-2.json
@@ -16,7 +16,7 @@ process_goldens2 <- jsonlite::fromJSON(
 process_golden_models2 <- process_goldens2$models
 process_tolerance2 <- process_goldens2$provenance$tolerance
 
-# Third golden file: generic-estimator catalog models 28/29 (DEBT-118 residual).
+# Third golden file: generic-estimator catalog models 28/29.
 process_goldens3 <- jsonlite::fromJSON(
   file.path(
     Sys.getenv("RESEARCHPATH_PROJECT_ROOT"),
@@ -225,7 +225,7 @@ expect_coefficients_match2 <- function(actual, expected_rows, label, model_key, 
 
 # --- assertions ---------------------------------------------------------------
 
-assert_legacy_template <- function(model_number) {
+assert_predefined_template <- function(model_number) {
   key <- paste0("model_", model_number)
   work <- tempfile(paste0("rp-process2-", model_number, "-"))
   dir.create(work)
@@ -283,27 +283,27 @@ assert_legacy_template <- function(model_number) {
 }
 
 test_that("model_5 matches official macro (direct-path moderation + mediation)", {
-  assert_legacy_template(5)
+  assert_predefined_template(5)
 })
 
 test_that("model_15 matches official macro (b + direct moderation)", {
-  assert_legacy_template(15)
+  assert_predefined_template(15)
 })
 
 test_that("model_21 matches official macro (W on a, Z on b, 3x3 grid)", {
-  assert_legacy_template(21)
+  assert_predefined_template(21)
 })
 
 test_that("model_22 matches official macro (W on a + direct, Z on b)", {
-  assert_legacy_template(22)
+  assert_predefined_template(22)
 })
 
 test_that("model_58 matches official macro (W on a + b)", {
-  assert_legacy_template(58)
+  assert_predefined_template(58)
 })
 
 test_that("model_59 matches official macro (W on a + b + direct)", {
-  assert_legacy_template(59)
+  assert_predefined_template(59)
 })
 
 test_that("model_60 matches official macro (generic estimator path, a-W/a-Z/b-W)", {

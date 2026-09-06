@@ -1,5 +1,5 @@
 # cmb.R
-# WP-CMB-01: Common Method Bias (CMB) Diagnostic Suite
+# Common Method Bias (CMB) Diagnostic Suite
 # Marker Variable Method (Lindell & Whitney 2001), Unmeasured Latent Method Factor (ULMC), MTMM
 
 calc_marker_variable_cmb <- function(df, marker_var_id, constructs) {

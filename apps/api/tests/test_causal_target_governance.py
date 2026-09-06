@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from m3_helpers import client
+from model_test_helpers import client
 from study_plan_test_helpers import typed_plan_payload
 
 

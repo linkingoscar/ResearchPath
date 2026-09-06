@@ -43,7 +43,7 @@ def test_fresh_database_has_versioned_schema_and_enforced_foreign_keys(
             )
 
 
-def test_legacy_version_one_database_migrates_in_place_and_is_idempotent(
+def test_version_one_database_upgrades_in_place_and_is_idempotent(
     tmp_path,
 ) -> None:
     settings = replace(get_settings(), state_root=tmp_path / "workspace")
@@ -55,8 +55,8 @@ def test_legacy_version_one_database_migrates_in_place_and_is_idempotent(
             "INSERT INTO dataset_versions "
             "(id, project_id, created_at, original_name, file_format, sha256, "
             "manifest_path, row_count, column_count) "
-            "VALUES ('legacy', 'default', '2026-07-14', 'legacy.csv', 'csv', "
-            "'abc', 'legacy.json', 1, 1)"
+            "VALUES ('seed', 'default', '2026-07-14', 'seed.csv', 'csv', "
+            "'abc', 'seed.json', 1, 1)"
         )
 
     DatasetRepository(settings)
@@ -67,7 +67,7 @@ def test_legacy_version_one_database_migrates_in_place_and_is_idempotent(
         assert {"job_kind", "cancel_requested", "result_path"} <= columns
         assert (
             connection.execute(
-                "SELECT COUNT(*) FROM dataset_versions WHERE id = 'legacy'"
+                "SELECT COUNT(*) FROM dataset_versions WHERE id = 'seed'"
             ).fetchone()[0]
             == 1
         )
@@ -219,7 +219,7 @@ def test_analysis_snapshots_become_dataset_scoped_without_losing_drafts() -> Non
         assert connection.execute("PRAGMA foreign_key_check").fetchall() == []
 
 
-def test_migration_repairs_are_safe_for_missing_legacy_child_tables() -> None:
+def test_migration_repairs_are_safe_for_missing_source_child_tables() -> None:
     with sqlite3.connect(":memory:") as connection:
         _ensure_dataset_scoped_analysis_snapshots(connection)
 

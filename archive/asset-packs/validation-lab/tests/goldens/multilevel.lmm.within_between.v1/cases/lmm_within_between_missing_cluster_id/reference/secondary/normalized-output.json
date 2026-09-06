@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "MISSING_CLUSTER_VARIABLE",
-    "message": "Fewer than minimum required clusters for multilevel model estimation"
-  }
-}

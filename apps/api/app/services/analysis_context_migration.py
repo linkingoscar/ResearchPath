@@ -15,11 +15,10 @@ def _column_names(connection: sqlite3.Connection, table: str) -> set[str]:
 
 
 def _ensure_nullable_imputation_structure(connection: sqlite3.Connection) -> None:
-    """Allow plans for independent cross-sectional data without fake roles.
+    """Allow independent cross-sectional plans to omit structure roles.
 
-    Migration 007 originally made structure_version_id NOT NULL. SQLite cannot
-    alter that constraint in place, so rebuild only databases that still have
-    the old shape and preserve all existing plan payloads.
+    SQLite cannot alter the constraint in place, so only tables that still
+    require ``structure_version_id`` are rebuilt.
     """
     columns = connection.execute("PRAGMA table_info(imputation_plan_versions)").fetchall()
     structure_column = next((row for row in columns if row[1] == "structure_version_id"), None)
@@ -29,7 +28,7 @@ def _ensure_nullable_imputation_structure(connection: sqlite3.Connection) -> Non
     # imputation artifact table therefore has to be rebuilt in the same
     # transaction as the parent table; toggling PRAGMA foreign_keys here is
     # ineffective because migrations run inside BEGIN IMMEDIATE.
-    connection.execute("ALTER TABLE imputation_plan_versions RENAME TO imputation_plan_versions_legacy")
+    connection.execute("ALTER TABLE imputation_plan_versions RENAME TO imputation_plan_versions_previous")
     connection.execute(
         """
         CREATE TABLE imputation_plan_versions (
@@ -48,16 +47,15 @@ def _ensure_nullable_imputation_structure(connection: sqlite3.Connection) -> Non
         "measurement_version_id, context_hash, substantive_model_hash, plan_hash, payload_json, created_at) "
         "SELECT id, dataset_version_id, structure_version_id, sample_identity, sample_hash, "
         "measurement_version_id, context_hash, substantive_model_hash, plan_hash, payload_json, created_at "
-        "FROM imputation_plan_versions_legacy"
+        "FROM imputation_plan_versions_previous"
     )
 
-    # This is the only table created by migration 007 that references
-    # imputation_plan_versions.  Recreate it with the new parent identity so
-    # existing completed artifacts remain valid and the old parent can be
-    # removed without disabling referential integrity.
+    # This is the only child table that references imputation_plan_versions.
+    # Recreate it with the parent identity so completed artifacts remain valid
+    # while referential integrity stays enabled.
     child_columns = _column_names(connection, "imputation_dataset_versions")
     if child_columns:
-        connection.execute("ALTER TABLE imputation_dataset_versions RENAME TO imputation_dataset_versions_legacy")
+        connection.execute("ALTER TABLE imputation_dataset_versions RENAME TO imputation_dataset_versions_previous")
         connection.execute(
             """
             CREATE TABLE imputation_dataset_versions_rebuild (
@@ -74,14 +72,14 @@ def _ensure_nullable_imputation_structure(connection: sqlite3.Connection) -> Non
             "INSERT INTO imputation_dataset_versions_rebuild "
             "(id, plan_version_id, job_id, artifact_manifest_path, artifact_hash, status, created_at) "
             "SELECT id, plan_version_id, job_id, artifact_manifest_path, artifact_hash, status, created_at "
-            "FROM imputation_dataset_versions_legacy"
+            "FROM imputation_dataset_versions_previous"
         )
-        connection.execute("DROP TABLE imputation_dataset_versions_legacy")
+        connection.execute("DROP TABLE imputation_dataset_versions_previous")
         connection.execute(
             "ALTER TABLE imputation_dataset_versions_rebuild RENAME TO imputation_dataset_versions"
         )
 
-    connection.execute("DROP TABLE imputation_plan_versions_legacy")
+    connection.execute("DROP TABLE imputation_plan_versions_previous")
 
 
 def _ensure_dataset_scoped_analysis_snapshots(connection: sqlite3.Connection) -> None:
@@ -117,7 +115,7 @@ def _ensure_dataset_scoped_analysis_snapshots(connection: sqlite3.Connection) ->
         return
 
     connection.execute(
-        "ALTER TABLE analysis_context_snapshots RENAME TO analysis_context_snapshots_legacy"
+        "ALTER TABLE analysis_context_snapshots RENAME TO analysis_context_snapshots_previous"
     )
     connection.execute(
         """
@@ -133,12 +131,12 @@ def _ensure_dataset_scoped_analysis_snapshots(connection: sqlite3.Connection) ->
         "INSERT INTO analysis_context_snapshots "
         "(id, dataset_version_id, context_hash, payload_json, created_at) "
         "SELECT id, dataset_version_id, context_hash, payload_json, created_at "
-        "FROM analysis_context_snapshots_legacy"
+        "FROM analysis_context_snapshots_previous"
     )
 
     draft_columns = _column_names(connection, "analysis_drafts")
     if draft_columns:
-        connection.execute("ALTER TABLE analysis_drafts RENAME TO analysis_drafts_legacy")
+        connection.execute("ALTER TABLE analysis_drafts RENAME TO analysis_drafts_previous")
         connection.execute(
             """
             CREATE TABLE analysis_drafts_rebuild (
@@ -162,16 +160,16 @@ def _ensure_dataset_scoped_analysis_snapshots(connection: sqlite3.Connection) ->
             "SELECT id, dataset_version_id, revision, family, slice_id, context_snapshot_id, "
             "context_hash, spec_json, role_overrides_json, validity, "
             "invalidation_reasons_json, created_at, updated_at "
-            "FROM analysis_drafts_legacy"
+            "FROM analysis_drafts_previous"
         )
-        connection.execute("DROP TABLE analysis_drafts_legacy")
+        connection.execute("DROP TABLE analysis_drafts_previous")
         connection.execute("ALTER TABLE analysis_drafts_rebuild RENAME TO analysis_drafts")
         connection.execute(
             "CREATE INDEX IF NOT EXISTS idx_analysis_drafts_dataset "
             "ON analysis_drafts(dataset_version_id, updated_at DESC)"
         )
 
-    connection.execute("DROP TABLE analysis_context_snapshots_legacy")
+    connection.execute("DROP TABLE analysis_context_snapshots_previous")
 
 
 def _state_root(connection: sqlite3.Connection) -> Path | None:
@@ -179,30 +177,30 @@ def _state_root(connection: sqlite3.Connection) -> Path | None:
     return Path(database_path).resolve().parent if database_path else None
 
 
-def _legacy_frame(
+def _source_frame(
     connection: sqlite3.Connection, dataset_id: str
 ) -> tuple[dict[str, object], pd.DataFrame]:
     state_root = _state_root(connection)
     if state_root is None:
-        raise RuntimeError("无法从内存数据库解析旧数据版本的规范化路径")
+        raise RuntimeError("无法从内存数据库解析源数据版本的规范化路径")
     row = connection.execute(
         "SELECT manifest_path FROM dataset_versions WHERE id = ?", (dataset_id,)
     ).fetchone()
     if row is None:
-        raise RuntimeError(f"旧结构引用的数据版本不存在: {dataset_id}")
+        raise RuntimeError(f"源结构引用的数据版本不存在: {dataset_id}")
     manifest_path = (state_root / str(row[0])).resolve()
     try:
         manifest_path.relative_to(state_root)
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("id") != dataset_id:
-            raise RuntimeError(f"旧数据清单身份不匹配: {dataset_id}")
+            raise RuntimeError(f"源数据清单身份不匹配: {dataset_id}")
         storage = manifest.get("storage")
         normalized = (state_root / storage["normalized"]).resolve() if isinstance(storage, dict) else None
         if not isinstance(normalized, Path):
-            raise RuntimeError(f"旧数据清单缺少规范化数据路径: {dataset_id}")
+            raise RuntimeError(f"源数据清单缺少规范化数据路径: {dataset_id}")
         normalized.relative_to(state_root)
     except (OSError, ValueError, json.JSONDecodeError, KeyError) as error:
-        raise RuntimeError(f"旧数据清单或规范化路径无效: {dataset_id}") from error
+        raise RuntimeError(f"源数据清单或规范化路径无效: {dataset_id}") from error
     return manifest, pd.read_parquet(normalized)
 
 
@@ -325,10 +323,10 @@ def _migration_007_analysis_context_versions(connection: sqlite3.Connection) -> 
             )
             context_ids[(str(row[1]), context_hash)] = context_id
         roles = {"subjectId": row[3], "clusterId": row[4], "timeId": row[5], "groupId": None, "treatmentId": None}
-        manifest, frame = _legacy_frame(connection, str(row[0]))
+        manifest, frame = _source_frame(connection, str(row[0]))
         variables = manifest.get("variables")
         if not isinstance(variables, list):
-            raise RuntimeError(f"旧数据清单缺少变量字典: {row[0]}")
+            raise RuntimeError(f"源数据清单缺少变量字典: {row[0]}")
         names = {str(item["id"]): str(item["originalName"]) for item in variables if isinstance(item, dict) and "id" in item and "originalName" in item}
         profile_roles = {role: names.get(value) if isinstance(value, str) else None for role, value in roles.items()}
         profile, status, warnings = profile_structure(frame, profile_roles)

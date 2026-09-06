@@ -48,7 +48,7 @@ beforeEach(() => {
 })
 
 describe('empiricalDraftStatusForOutput', () => {
-  it('finds the context-specific legacy draft only when it belongs to the latest run', () => {
+  it('finds the context-specific recovered draft only when it belongs to the latest run', () => {
     const contextHash = 'c'.repeat(64)
     const key = `researchpath.empirical.draft.v1:${dataset.id}:${dataset.originalFile.sha256}:1:null::${contextHash}:descriptives`
     localStorage.setItem(key, JSON.stringify({

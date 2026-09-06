@@ -12,9 +12,8 @@ from app.settings import Settings
 class AnalysisContextRepositoryMixin(AnalysisStructureRepositoryMixin):
     """Persistence for immutable context and structure versions.
 
-    The old ``study_contexts`` and ``dataset_structures`` tables remain in the
-    database for compatibility and recovery audit.  All new reads and writes
-    use the version tables created by migration 7.
+    ``study_contexts`` and ``dataset_structures`` retain a recovery projection.
+    Authoritative reads and writes use the immutable version tables.
     """
 
     settings: Settings

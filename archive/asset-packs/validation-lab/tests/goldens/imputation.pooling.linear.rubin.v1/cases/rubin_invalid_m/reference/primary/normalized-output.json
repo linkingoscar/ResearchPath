@@ -1,9 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "RUBIN_TOO_FEW_IMPUTATIONS",
-    "message": "Rubin pooling requires at least two imputations",
-    "mustNotReturnEstimates": true,
-    "mustNotFallback": true
-  }
-}

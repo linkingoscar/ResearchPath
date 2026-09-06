@@ -45,7 +45,7 @@ def _has_cycle(nodes: set[str], edges: list[dict[str, Any]]) -> bool:
 
 
 def validate_model_semantics(model_spec: dict[str, Any]) -> dict[str, Any]:
-    """Validate the MVP ModelSpec graph independently from a concrete dataset."""
+    """Validate the ModelSpec graph independently from a concrete dataset."""
 
     errors: list[str] = []
     warnings: list[dict[str, str]] = []
@@ -484,10 +484,9 @@ def validate_model_semantics(model_spec: dict[str, Any]) -> dict[str, Any]:
         else:
             errors.append("中介变量个数不能超过 2 个")
 
-    # The historical MVP recognizer above remains as a compatibility oracle for
-    # the 14 executable estimators. Its template-mismatch messages are not
-    # structural errors: PROCESS 5.0 contains many additional numbered and
-    # custom topologies, which are classified by the versioned catalog.
+    # The fast recognizer above handles 14 predefined estimators. Its
+    # template-mismatch messages are not structural errors: PROCESS 5.0 also
+    # contains numbered and custom topologies classified by the catalog.
     del errors[catalog_error_offset:]
     catalog_match = match_process_model(model_spec)
     catalog_fields = catalog_match.as_dict()
@@ -520,7 +519,7 @@ def validate_model_semantics(model_spec: dict[str, Any]) -> dict[str, Any]:
                 {
                     "code": "ORDINAL_AS_NUMERIC",
                     "severity": "warning",
-                    "message": "以下有序变量将在 MVP 中按数值变量处理: " + "、".join(ordinal_nodes),
+                    "message": "以下有序变量将按数值变量处理: " + "、".join(ordinal_nodes),
                 }
             )
 

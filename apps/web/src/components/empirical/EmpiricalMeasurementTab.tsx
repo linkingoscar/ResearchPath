@@ -12,7 +12,7 @@ interface EmpiricalMeasurementTabProps {
   summaryQuery: SegmentQueryState<EmpiricalAnalysisSegmentMap['summary']>
 }
 
-// F-002: parallel analysis now declares which statistical world it ran in.
+// Parallel analysis declares which statistical world it ran in.
 // The labels make the correlation/simulation choice user-visible so ordinal
 // data can never silently fall back to a Pearson null distribution.
 const parallelCorrelationLabel = (type?: string): string =>

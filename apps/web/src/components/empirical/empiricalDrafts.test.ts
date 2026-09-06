@@ -55,15 +55,15 @@ const config = {
 beforeEach(() => localStorage.clear())
 
 describe('analysis-scoped empirical drafts', () => {
-  it('migrates a legacy procedure draft without deleting the recovery key', () => {
-    const legacyKey = empiricalDraftKey(dataset, null)
+  it('scopes a stored procedure draft without deleting the recovery key', () => {
+    const recoveryKey = empiricalDraftKey(dataset, null)
     const analysisKey = empiricalDraftKey(dataset, null, undefined, 'analysis_desc')
     const draft = { config, activeRunId: 'run_1', lastRunConfig: config }
-    expect(saveEmpiricalDraft(legacyKey, draft)).toBe(true)
+    expect(saveEmpiricalDraft(recoveryKey, draft)).toBe(true)
 
     expect(migrateEmpiricalDraftToAnalysis(dataset, null, undefined, 'analysis_desc', 'descriptives')).toEqual(draft)
     expect(readEmpiricalDraft(analysisKey, 'descriptives')).toEqual(draft)
-    expect(readEmpiricalDraft(legacyKey, 'descriptives')).toEqual(draft)
+    expect(readEmpiricalDraft(recoveryKey, 'descriptives')).toEqual(draft)
   })
 
   it('keeps drafts for two analysis ids independent even when the procedure matches', () => {

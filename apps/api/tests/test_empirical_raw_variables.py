@@ -9,7 +9,7 @@ from _empirical_center_helpers import (
     _reference_holm_adjust,
 )
 from _sem_calculations_helpers import _ensure_independent_context
-from m3_helpers import client
+from model_test_helpers import client
 from openpyxl import load_workbook
 
 

@@ -300,7 +300,7 @@ class AnalysisStructureRepositoryMixin:
         dataset_id: str,
         structure: dict[str, object],
         *,
-        allow_legacy_warning_override: bool = False,
+        allow_existing_warning_override: bool = False,
     ) -> dict[str, object]:
         dataset = self.get_dataset(dataset_id)
         context = cast(dict[str, object], structure["context"])
@@ -309,8 +309,8 @@ class AnalysisStructureRepositoryMixin:
             for role in ("subjectId", "clusterId", "timeId", "groupId", "treatmentId", "dataLayout", "waveCount")
         }
         override_reason = structure.get("overrideReason")
-        if allow_legacy_warning_override and override_reason is None:
-            override_reason = "兼容旧接口保存时确认已知晓结构质量警告"
+        if allow_existing_warning_override and override_reason is None:
+            override_reason = "保存时已确认知晓结构质量警告"
         with self._connect() as connection:
             context_version = self._context_version_for_input(connection, str(dataset["projectId"]), context, _utc_now())
             latest = self._latest_structure_row(connection, dataset_id)

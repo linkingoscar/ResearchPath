@@ -177,13 +177,13 @@ def test_efa_r_runner_returns_loadings_and_parallel_analysis() -> None:
     assert efa["factorCount"] == 2
     assert len(efa["loadings"]) == 6
     assert efa["parallelAnalysis"] is not None
-    # F-002: parallel analysis declares the correlation world it ran in; the
+    # Parallel analysis declares the correlation world it ran in; the
     # continuous fixture must report Pearson, never an ordinal simulation.
     assert efa["parallelAnalysis"]["available"] is True
     assert efa["parallelAnalysis"]["correlationType"] == "pearson"
     assert efa["parallelAnalysis"]["simulationType"] == "continuous_pearson"
     assert efa["parallelAnalysis"]["quantile"] == 0.95
-    # F-004: numerical fallbacks surface inside the result document
+    # Numerical fallbacks surface inside the result document
     # diagnostics (empty here because no fallback was needed).
     assert efa["diagnostics"]["numericalFallbacks"] == []
     assert efa["requestedCorrelationType"] == "pearson"
@@ -192,7 +192,7 @@ def test_efa_r_runner_returns_loadings_and_parallel_analysis() -> None:
     assert efa["executedExtractionMethod"] == "ml"
     assert efa["requestedRotation"] == "promax"
     assert efa["executedRotation"] == "promax"
-    # F-003: split validation refits the user's estimator spec (ML, Pearson
+    # Split validation refits the user's estimator spec (ML, Pearson
     # for the continuous fixture) instead of silently swapping to ML/factanal
     # defaults.
     assert efa["splitValidation"]["available"] is True

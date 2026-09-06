@@ -49,17 +49,17 @@ const nextDataset: DatasetVersion = {
   },
 }
 
-const legacyKey = 'researchpath.empirical.runs.v1:dataset_demo:null'
-const nextLegacyKey = 'researchpath.empirical.runs.v1:dataset_next:null'
+const recoveryKey = 'researchpath.empirical.runs.v1:dataset_demo:null'
+const nextRecoveryKey = 'researchpath.empirical.runs.v1:dataset_next:null'
 
 beforeEach(() => {
   localStorage.clear()
   vi.useRealTimers()
 })
 
-describe('analysis document compatibility index', () => {
-  it('groups repeated legacy procedure runs under one stable analysis document', () => {
-    localStorage.setItem(legacyKey, JSON.stringify([
+describe('analysis document recovery index', () => {
+  it('groups repeated recovered procedure runs under one stable analysis document', () => {
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_desc_2', procedure: 'descriptives', createdAt: '2026-09-03T02:00:00Z' },
       { id: 'run_corr_1', procedure: 'correlation', createdAt: '2026-09-03T01:30:00Z' },
       { id: 'run_desc_1', procedure: 'descriptives', createdAt: '2026-09-03T01:00:00Z' },
@@ -96,7 +96,7 @@ describe('analysis document compatibility index', () => {
   })
 
   it('uses an explicit analysis id from new run history instead of grouping only by procedure', () => {
-    localStorage.setItem(legacyKey, JSON.stringify([
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_a', procedure: 'descriptives', analysisId: 'analysis_a', createdAt: '2026-09-03T02:00:00Z' },
       { id: 'run_b', procedure: 'descriptives', analysisId: 'analysis_b', createdAt: '2026-09-03T01:00:00Z' },
     ]))
@@ -110,8 +110,8 @@ describe('analysis document compatibility index', () => {
     expect(index.runs.find((run) => run.id === 'run_b')?.analysisId).toBe('analysis_b')
   })
 
-  it('is idempotent and keeps the legacy recovery index intact', () => {
-    localStorage.setItem(legacyKey, JSON.stringify([
+  it('is idempotent and keeps the recovery index intact', () => {
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_freq_1', procedure: 'frequencies', createdAt: '2026-09-03T01:00:00Z' },
     ]))
 
@@ -124,16 +124,16 @@ describe('analysis document compatibility index', () => {
     expect(second.runs[0]).toMatchObject({
       id: 'run_freq_1',
       submittedSpec: null,
-      runStatus: 'legacy_indexed',
+      runStatus: 'recovered_indexed',
       draftRevision: 0,
     })
-    expect(localStorage.getItem(legacyKey)).toContain('run_freq_1')
+    expect(localStorage.getItem(recoveryKey)).toContain('run_freq_1')
   })
 
   it('persists user-facing analysis metadata without changing run ownership', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-09-03T05:00:00Z'))
-    localStorage.setItem(legacyKey, JSON.stringify([
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_desc_1', procedure: 'descriptives', createdAt: '2026-09-03T01:00:00Z' },
       { id: 'run_corr_1', procedure: 'correlation', createdAt: '2026-09-03T02:00:00Z' },
     ]))
@@ -162,14 +162,14 @@ describe('analysis document compatibility index', () => {
   it('keeps the newest run identity even when analysis metadata was edited later', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-09-03T05:00:00Z'))
-    localStorage.setItem(legacyKey, JSON.stringify([
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_desc_1', procedure: 'descriptives', createdAt: '2026-09-03T01:00:00Z' },
     ]))
     const initial = loadEmpiricalAnalysisIndex(dataset, null)
     const descriptives = initial.documents[0]
     updateAnalysisDocumentMetadata(dataset.projectId, descriptives.id, { title: '描述统计 A' })
 
-    localStorage.setItem(legacyKey, JSON.stringify([
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_desc_2', procedure: 'descriptives', createdAt: '2026-09-03T04:00:00Z' },
       { id: 'run_desc_1', procedure: 'descriptives', createdAt: '2026-09-03T01:00:00Z' },
     ]))
@@ -182,14 +182,14 @@ describe('analysis document compatibility index', () => {
     })
   })
 
-  it('keeps old dataset analyses discoverable and marks their runs stale', () => {
-    localStorage.setItem(legacyKey, JSON.stringify([
+  it('keeps non-current dataset analyses discoverable and marks their runs stale', () => {
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_old', procedure: 'correlation', createdAt: '2026-09-03T01:00:00Z' },
     ]))
     const oldIndex = loadEmpiricalAnalysisIndex(dataset, null)
     expect(oldIndex.documents).toHaveLength(1)
 
-    localStorage.setItem(nextLegacyKey, JSON.stringify([
+    localStorage.setItem(nextRecoveryKey, JSON.stringify([
       { id: 'run_current', procedure: 'descriptives', createdAt: '2026-09-03T07:00:00Z' },
     ]))
     const index = loadEmpiricalAnalysisIndex(nextDataset, null)
@@ -208,7 +208,7 @@ describe('analysis document compatibility index', () => {
   })
 
   it('sets and clears a primary run only within its owning analysis', () => {
-    localStorage.setItem(legacyKey, JSON.stringify([
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_desc_2', procedure: 'descriptives', createdAt: '2026-09-03T02:00:00Z' },
       { id: 'run_desc_1', procedure: 'descriptives', createdAt: '2026-09-03T01:00:00Z' },
       { id: 'run_corr_1', procedure: 'correlation', createdAt: '2026-09-03T01:30:00Z' },

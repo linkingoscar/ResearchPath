@@ -1,7 +1,7 @@
-# ResearchPath R Engine - Multiple Imputation Rubin Pooling (WP-MI-02)
+# ResearchPath R Engine - Multiple Imputation Rubin Pooling
 #
-# 能力边界（DEBT-145）：产品当前只提供逐系数 Rubin 合并。曾存在但从未
-# 接入产品输出的 D1 函数已删除；D3 从未实现。未来若增加多变量合并检验，
+# 能力边界：产品只提供逐系数 Rubin 合并，不包含多变量 D1/D3 检验。
+# 未来若增加多变量合并检验，
 # 必须先定义公开结果契约、方法参考与独立验证证据，再进入本库。
 
 if (!exists("researchpath_validate_confidence_level", mode = "function", inherits = TRUE)) {

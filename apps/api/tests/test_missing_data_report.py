@@ -5,7 +5,7 @@ from io import BytesIO
 from zipfile import ZipFile
 
 import pytest
-from m3_helpers import _model_dataset, client
+from model_test_helpers import _model_dataset, client
 
 
 def _await_empirical_job(response):

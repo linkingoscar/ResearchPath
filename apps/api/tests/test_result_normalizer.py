@@ -1,4 +1,4 @@
-"""DEBT-003: unified R->Python result normalization layer."""
+"""Unified R-to-Python result normalization tests."""
 
 from __future__ import annotations
 

@@ -341,7 +341,7 @@ export function OutputWorkspace({ dataset, measurement, onOpenProcedure }: Outpu
           <div className="method-card-status-row">
             <span className="context-method-status">运行 {selectedRun.id.slice(0, 12)}</span>
             <span className={`context-method-status${selectedFreshness === 'stale' ? ' method-status-needs-setup' : ''}`}>
-              {selectedFreshness === 'stale' ? '基于旧设置' : '当前数据/量表'}
+              {selectedFreshness === 'stale' ? '基于非当前设置' : '当前数据/量表'}
             </span>
             {selectedDocument.primaryRunId === selectedRun.id ? <span className="context-method-status">主要结果</span> : null}
             {selectedDetail ? <span className="context-method-status">草稿修订 {selectedDetail.draftRevision}</span> : null}
@@ -425,7 +425,7 @@ export function OutputWorkspace({ dataset, measurement, onOpenProcedure }: Outpu
                         {document.pinned ? <span className="context-method-status">已固定</span> : null}
                         {document.primaryRunId ? <span className="context-method-status">已指定主要结果</span> : null}
                         <span className={`context-method-status${freshness === 'stale' ? ' method-status-needs-setup' : ''}`}>
-                          {freshness === 'stale' ? '基于旧设置' : '当前数据/量表'}
+                          {freshness === 'stale' ? '基于非当前设置' : '当前数据/量表'}
                         </span>
                       </div>
                       {latestRun ? (
@@ -515,7 +515,7 @@ export function OutputWorkspace({ dataset, measurement, onOpenProcedure }: Outpu
                         {document.pinned ? <span className="context-method-status">已固定</span> : null}
                         {document.primaryRunId ? <span className="context-method-status">已指定主要结果</span> : null}
                         <span className={`context-method-status${latestFreshness === 'stale' ? ' method-status-needs-setup' : ''}`}>
-                          {latestFreshness === 'stale' ? '基于旧设置' : '当前数据/量表'}
+                          {latestFreshness === 'stale' ? '基于非当前设置' : '当前数据/量表'}
                         </span>
                         {latestRun ? <span className="context-method-status">{runStatusLabel(latestServerJob?.status ?? latestDetail?.runStatus)}</span> : null}
                         {latestServerJob ? <span className="context-method-status">服务端已确认</span> : null}
@@ -549,7 +549,7 @@ export function OutputWorkspace({ dataset, measurement, onOpenProcedure }: Outpu
                                   <code>{run.id.slice(0, 12)}</code>
                                   {' · '}{new Date(run.createdAt).toLocaleString()}
                                   {' · '}{runStatusLabel(serverJob?.status ?? detail?.runStatus)}
-                                  {freshness === 'stale' ? ' · 基于旧设置' : ''}
+                                  {freshness === 'stale' ? ' · 基于非当前设置' : ''}
                                   {document.primaryRunId === run.id ? ' · 主要结果' : ''}
                                   {detail ? ` · 修订 ${detail.draftRevision}` : ''}
                                   {serverJob ? ' · 服务端已确认' : ''}

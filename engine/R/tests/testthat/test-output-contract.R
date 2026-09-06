@@ -1,4 +1,4 @@
-# Unified result output layer (DEBT-003): every R entrypoint writes through
+# Unified result output layer: every R entrypoint writes through
 # researchpath_write_result with one serialization contract.
 
 source_engine("lib/runtime.R")

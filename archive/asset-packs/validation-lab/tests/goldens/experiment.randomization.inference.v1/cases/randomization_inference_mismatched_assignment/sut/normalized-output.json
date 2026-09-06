@@ -1,9 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "RANDOMIZATION_ASSIGNMENT_LENGTH_MISMATCH",
-    "message": "Assignment length does not match the outcome vector",
-    "mustNotReturnEstimates": true,
-    "mustNotFallback": true
-  }
-}

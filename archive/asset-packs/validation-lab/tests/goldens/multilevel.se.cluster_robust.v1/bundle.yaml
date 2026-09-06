@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: multilevel.se.cluster_robust.v1
-methodFamily: multilevel
-cases:
-  - cr2_small_sample_typical
-  - cr2_unbalanced_clusters_complex
-  - cr2_few_clusters_boundary
-  - cr2_missing_cluster_id_failure

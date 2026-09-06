@@ -182,7 +182,7 @@ run_power <- function() {
 }
 
 # ---------------------------------------------------------------------------
-# Precision Analysis (CI Width Target) (WP-CORE-PWR-02)
+# Precision Analysis (CI Width Target)
 # ---------------------------------------------------------------------------
 
 calc_precision_sample_size <- function(target_width, confidence_level = 0.95, sd = 1.0, groups = 1) {

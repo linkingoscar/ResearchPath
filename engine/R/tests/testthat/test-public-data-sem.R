@@ -150,7 +150,7 @@ for (tag in names(sem_models)) {
     expect_true(isTRUE(result$semResult$publicationEligible),
       info = paste0(tag, ": SEM should be publication-eligible (no convergence warnings)"))
 
-    # DEBT-147: loadings/paths carry level-driven normal CIs.
+    # Loadings and paths carry confidence-level-driven normal CIs.
     conf <- if (is.null(result$provenance$confidenceLevel)) {
       0.95
     } else {
@@ -182,7 +182,7 @@ for (tag in names(sem_models)) {
       }
     }
 
-    # DEBT-146: CR suppression must pair with the reason field and exactly one
+    # CR suppression must pair with the reason field and exactly one
     # warning-code emission family; non-suppressed constructs stay numeric.
     warning_codes <- vapply(result$warnings, function(w) w$code, character(1))
     cr_warning_present <- "SEM_CR_SUPPRESSED_CORRELATED_RESIDUALS" %in% warning_codes
@@ -208,7 +208,7 @@ for (tag in names(sem_models)) {
       info = paste0(tag, ": CR warning presence must match suppressed constructs")
     )
 
-    # DEBT-149: without bootstrap the provenance seed must be null, and the
+    # Without bootstrap the provenance seed must be null, and the
     # executed standardErrors value must be a known enum member.
     expect_null(result$provenance$seed,
       info = paste0(tag, ": non-bootstrap provenance.seed must be null"))

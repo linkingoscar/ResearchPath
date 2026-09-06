@@ -73,7 +73,7 @@ export function useModelBuilderDrafting({
         }
         setDraftState('saved')
       } else if (restored) {
-        setBuilderError('发现旧上下文模型草稿；已保留为历史记录，不会混入当前数据。当前模型将按新 contextHash 重新保存。')
+        setBuilderError('发现非当前上下文的模型草稿；已保留为运行记录，不会混入当前数据。当前模型将按新 contextHash 重新保存。')
       }
       setDraftHydrated(true)
     } else if (draftQuery.isError) {

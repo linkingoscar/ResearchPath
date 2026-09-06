@@ -13,7 +13,7 @@ describe('storedAnalysisMethodSlice', () => {
     expect(storedAnalysisMethodSlice('diary.dsem')).toBe('empirical.diary.dsem')
   })
 
-  it('does not invent method scope for legacy or expanded basic empirical ids', () => {
+  it('does not invent method scope for unscoped or expanded empirical ids', () => {
     expect(storedAnalysisMethodSlice('empirical.longitudinal')).toBeUndefined()
     expect(storedAnalysisMethodSlice('empirical.overview.descriptives')).toBeUndefined()
     expect(storedAnalysisMethodSlice(undefined)).toBeUndefined()

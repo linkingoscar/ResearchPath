@@ -56,11 +56,11 @@ def test_workspace_backup_verify_and_isolated_restore_round_trip(tmp_path) -> No
 
 
 def test_version_one_project_archive_restores_and_migrates_with_data(tmp_path) -> None:
-    settings = replace(get_settings(), state_root=tmp_path / "legacy-workspace")
+    settings = replace(get_settings(), state_root=tmp_path / "source-workspace")
     repository = DatasetRepository(settings)
     dataset = import_dataset(
         BytesIO(b"respondent_id,score\n1,3.5\n2,4.0\n"),
-        "legacy.csv",
+        "source.csv",
         settings,
         repository,
     )
@@ -88,15 +88,15 @@ def test_version_one_project_archive_restores_and_migrates_with_data(tmp_path) -
             """
         )
 
-    archive = tmp_path / "legacy-project.zip"
+    archive = tmp_path / "version-one-project.zip"
     created = create_workspace_backup(settings.state_root, archive)
     assert created["databaseUserVersion"] == 1
-    restored = tmp_path / "restored-legacy-workspace"
+    restored = tmp_path / "restored-workspace"
     restore_workspace_backup(archive, restored)
 
     migrated = DatasetRepository(replace(settings, state_root=restored))
     loaded = migrated.get_dataset(dataset["id"])
-    assert loaded["originalFile"]["name"] == "legacy.csv"
+    assert loaded["originalFile"]["name"] == "source.csv"
     assert loaded["rowCount"] == 2
     with migrated._connect() as connection:
         assert connection.execute("PRAGMA user_version").fetchone()[0] == (CURRENT_DATABASE_VERSION)

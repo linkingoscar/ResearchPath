@@ -19,7 +19,6 @@
       "structured results and reproducible exports"
     ],
     "deferred": [
-      "remaining dormant OB/CB research-program slices outside the restored workbenches",
       "research-program and preregistration workspace",
       "autonomous multi-source statistical certification",
       "quasi-experimental causal identification (fixed effects, DiD/event study, IV, RDD, IPW and synthetic control)"
@@ -28,10 +27,122 @@
   "recognizedProcessCatalog": {
     "version": "5.0",
     "modelCount": 55,
-    "models": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 28, 29, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 75, 76, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92],
+    "models": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      28,
+      29,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      75,
+      76,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+    ],
     "customTopologyRecognition": true
   },
-  "supportedProcessModels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 28, 29, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 75, 76, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92],
+  "supportedProcessModels": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    28,
+    29,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    75,
+    76,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92
+  ],
   "entrypoints": [
     {
       "id": "api",
@@ -73,36 +184,122 @@
     }
   ],
   "backendRoutes": [
-    { "domain": "system", "path": "apps/api/app/api/routes/system.py" },
-    { "domain": "datasets", "path": "apps/api/app/api/routes/datasets.py" },
-    { "domain": "models", "path": "apps/api/app/api/routes/models.py" },
-    { "domain": "analyses", "path": "apps/api/app/api/routes/analyses.py" },
-    { "domain": "advanced-analyses", "path": "apps/api/app/api/routes/advanced.py" },
-    { "domain": "study-context", "path": "apps/api/app/api/routes/studies.py" },
-    { "domain": "analysis-workflows", "path": "apps/api/app/api/routes/workflows.py" }
+    {
+      "domain": "system",
+      "path": "apps/api/app/api/routes/system.py"
+    },
+    {
+      "domain": "datasets",
+      "path": "apps/api/app/api/routes/datasets.py"
+    },
+    {
+      "domain": "models",
+      "path": "apps/api/app/api/routes/models.py"
+    },
+    {
+      "domain": "analyses",
+      "path": "apps/api/app/api/routes/analyses.py"
+    },
+    {
+      "domain": "advanced-analyses",
+      "path": "apps/api/app/api/routes/advanced.py"
+    },
+    {
+      "domain": "study-context",
+      "path": "apps/api/app/api/routes/studies.py"
+    },
+    {
+      "domain": "analysis-workflows",
+      "path": "apps/api/app/api/routes/workflows.py"
+    }
   ],
   "frontendModules": [
-    { "domain": "system", "api": "apps/web/src/api/system.ts", "types": "apps/web/src/types/models.ts" },
-    { "domain": "datasets", "api": "apps/web/src/api/datasets.ts", "types": "apps/web/src/types/datasets.ts" },
-    { "domain": "models", "api": "apps/web/src/api/models.ts", "types": "apps/web/src/types/models.ts" },
-    { "domain": "analyses", "api": "apps/web/src/api/analyses.ts", "types": "apps/web/src/types/models.ts" },
-    { "domain": "advanced-analyses", "api": "apps/web/src/api/advanced.ts", "types": "apps/web/src/types/advanced.ts" },
-    { "domain": "study-context", "api": "apps/web/src/api/studies.ts", "types": "apps/web/src/types/study-context.ts" },
-    { "domain": "analysis-context", "api": "apps/web/src/api/analysis-context.ts", "types": "apps/web/src/types/analysis-context.ts" },
-    { "domain": "workflow-plans", "api": "apps/web/src/api/workflows.ts", "types": "apps/web/src/types/workflows.ts" }
+    {
+      "domain": "system",
+      "api": "apps/web/src/api/system.ts",
+      "types": "apps/web/src/types/models.ts"
+    },
+    {
+      "domain": "datasets",
+      "api": "apps/web/src/api/datasets.ts",
+      "types": "apps/web/src/types/datasets.ts"
+    },
+    {
+      "domain": "models",
+      "api": "apps/web/src/api/models.ts",
+      "types": "apps/web/src/types/models.ts"
+    },
+    {
+      "domain": "analyses",
+      "api": "apps/web/src/api/analyses.ts",
+      "types": "apps/web/src/types/models.ts"
+    },
+    {
+      "domain": "advanced-analyses",
+      "api": "apps/web/src/api/advanced.ts",
+      "types": "apps/web/src/types/advanced.ts"
+    },
+    {
+      "domain": "study-context",
+      "api": "apps/web/src/api/studies.ts",
+      "types": "apps/web/src/types/study-context.ts"
+    },
+    {
+      "domain": "analysis-context",
+      "api": "apps/web/src/api/analysis-context.ts",
+      "types": "apps/web/src/types/analysis-context.ts"
+    },
+    {
+      "domain": "workflow-plans",
+      "api": "apps/web/src/api/workflows.ts",
+      "types": "apps/web/src/types/workflows.ts"
+    }
   ],
   "contracts": [
-    { "id": "dataset", "path": "specs/dataset-version.schema.json" },
-    { "id": "measurement", "path": "specs/measurement-version.schema.json" },
-    { "id": "model", "path": "specs/model-spec.schema.json" },
-    { "id": "result", "path": "specs/result-bundle.schema.json" },
-    { "id": "advanced-analysis-spec", "path": "specs/advanced-analysis-spec.schema.json" },
-    { "id": "advanced-result", "path": "specs/advanced-result-bundle.schema.json" },
-    { "id": "study-context", "path": "specs/study-context.schema.json" },
-    { "id": "analysis-context", "path": "specs/analysis-context.schema.json" },
-    { "id": "imputation-plan", "path": "specs/imputation-plan.schema.json" },
-    { "id": "study-plan", "path": "specs/study-plan.schema.json" },
-    { "id": "empirical-result", "path": "specs/empirical-result-bundle.schema.json" }
+    {
+      "id": "dataset",
+      "path": "specs/dataset-version.schema.json"
+    },
+    {
+      "id": "measurement",
+      "path": "specs/measurement-version.schema.json"
+    },
+    {
+      "id": "model",
+      "path": "specs/model-spec.schema.json"
+    },
+    {
+      "id": "result",
+      "path": "specs/result-bundle.schema.json"
+    },
+    {
+      "id": "advanced-analysis-spec",
+      "path": "specs/advanced-analysis-spec.schema.json"
+    },
+    {
+      "id": "advanced-result",
+      "path": "specs/advanced-result-bundle.schema.json"
+    },
+    {
+      "id": "study-context",
+      "path": "specs/study-context.schema.json"
+    },
+    {
+      "id": "analysis-context",
+      "path": "specs/analysis-context.schema.json"
+    },
+    {
+      "id": "imputation-plan",
+      "path": "specs/imputation-plan.schema.json"
+    },
+    {
+      "id": "study-plan",
+      "path": "specs/study-plan.schema.json"
+    },
+    {
+      "id": "empirical-result",
+      "path": "specs/empirical-result-bundle.schema.json"
+    }
   ],
   "publicDiscovery": {
     "openapi": "/api/openapi.json",
@@ -111,231 +308,21 @@
   },
   "governance": {
     "documentationIndex": "docs/README.md",
-    "coreScope": "docs/00-项目现状与产品边界.md",
+    "coreScope": "docs/00-产品边界.md",
     "productWorkflow": "docs/01-产品工作流与交互.md",
     "researchMethods": "docs/02-统计方法与报告规范.md",
     "architecture": "docs/03-系统架构与数据契约.md",
     "engineeringHarness": "docs/04-工程开发与验证.md",
     "operations": "docs/05-运行维护与发布.md",
-    "riskGovernance": "docs/06-安全风险与债务治理.md",
-    "capabilityRoadmap": "docs/07-能力矩阵与路线图.md",
-    "assetArchive": "docs/08-资产包与历史档案.md",
-    "usabilityProtocol": "docs/11-真人可用性验证方案.md",
+    "securityAndQuality": "docs/06-安全与质量治理.md",
+    "capabilityCatalog": "docs/07-能力矩阵与路线图.md",
+    "uxIaSpecification": "docs/08-UX-IA-产品规范.md",
+    "usabilityProtocol": "docs/09-真人可用性验证方案.md",
+    "processWorkbench": "docs/10-PROCESS-工作台说明.md",
+    "engineeringMethod": "docs/11-设计与工程方法.md",
     "license": "LICENSE",
-    "licensingModel": "proprietary-all-rights-reserved",
-    "historicalSecurityAudit": "archive/project-history/audits/2026-07-15-security-review/README.md",
-    "debtRegister": "docs/debt-register.json",
-    "debtRegisterSchema": "docs/debt-register.schema.json"
+    "licensingModel": "proprietary-all-rights-reserved"
   },
-  "assetPacks": [
-    {
-      "id": "ob-cb-expansion",
-      "status": "partially-restored",
-      "path": "archive/asset-packs/ob-cb-expansion",
-      "restoreGuide": "archive/asset-packs/ob-cb-expansion/README.md"
-    },
-    {
-      "id": "validation-lab",
-      "status": "dormant",
-      "path": "archive/asset-packs/validation-lab",
-      "restoreGuide": "archive/asset-packs/validation-lab/README.md"
-    }
-  ],
-  "restoredAssetSlices": [
-    {
-      "id": "cluster-aggregation-diagnostics",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/aggregation_diagnostics.R",
-        "engine/R/run_empirical_analysis.R",
-        "apps/api/app/services/empirical_analysis.py",
-        "apps/web/src/components/EmpiricalAnalysis.tsx"
-      ],
-      "outputs": [
-        "ICC(1)",
-        "ICC(2)",
-        "design effect",
-        "rwg(j)"
-      ]
-    },
-    {
-      "id": "longitudinal-panel",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/longitudinal_panel.R",
-        "engine/R/lib/longitudinal_latent.R",
-        "engine/R/lib/longitudinal_power.R",
-        "engine/R/run_empirical_analysis.R",
-        "apps/api/app/services/empirical_analysis.py",
-        "apps/web/src/components/empirical/LongitudinalPanelConfig.tsx",
-        "apps/web/src/components/empirical/LongitudinalPanelResult.tsx",
-        "apps/web/src/components/empirical/LongitudinalMethodsSection.tsx",
-        "apps/web/src/components/empirical/EmpiricalResultsNav.tsx"
-      ],
-      "presentation": {
-        "resultSource": "persisted empirical report segment",
-        "dedicatedResultTab": "longitudinal",
-        "prototypeDataAllowed": false
-      },
-      "outputs": [
-        "CLPM",
-        "RI-CLPM",
-        "LCM-SR",
-        "longitudinal ULMC sensitivity",
-        "autoregressive paths",
-        "cross-lagged paths",
-        "wave sample flow",
-        "longitudinal measurement invariance",
-        "competing and robustness models",
-        "Monte Carlo power, bias and coverage"
-      ]
-    },
-    {
-      "id": "daily-diary-multilevel",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/diary_multilevel.R",
-        "engine/R/lib/diary_glmm.R",
-        "engine/R/lib/diary_esm_evidence.R",
-        "engine/R/lib/diary_bayesian_diagnostics.R",
-        "engine/R/lib/diary_bayesian_dsem.R",
-        "engine/R/lib/diary_missing.R",
-        "engine/R/lib/diary_power.R",
-        "engine/R/run_empirical_analysis.R",
-        "apps/api/app/services/empirical_analysis.py",
-        "apps/api/app/services/empirical_advanced_method_export.py",
-        "apps/api/app/services/empirical_bayesian_figure_export.py",
-        "apps/web/src/components/empirical/DiaryMultilevelConfig.tsx",
-        "apps/web/src/components/empirical/DiaryAdvancedModelConfig.tsx",
-        "apps/web/src/components/empirical/DiaryMultilevelResult.tsx",
-        "apps/web/src/components/empirical/DiaryGlmmEvidenceResult.tsx",
-        "apps/web/src/components/empirical/DiaryDsemResult.tsx",
-        "apps/web/src/components/empirical/DiaryDsemPlots.tsx",
-        "apps/web/src/components/empirical/LongitudinalMethodsSection.tsx",
-        "apps/web/src/components/empirical/EmpiricalResultsNav.tsx"
-      ],
-      "presentation": {
-        "resultSource": "persisted empirical report segment",
-        "dedicatedResultTab": "diary",
-        "prototypeDataAllowed": false
-      },
-      "outputs": [
-        "two-level Gaussian LMM",
-        "within/between decomposition",
-        "random slopes",
-        "AR(1) residuals",
-        "lagged effects and cross-level moderation",
-        "compliance and multilevel reliability",
-        "two-level multiple imputation",
-        "1-1-1 and 2-1-1 multilevel mediation",
-        "Monte Carlo person-by-occasion power",
-        "binary/count/zero-inflated/Hurdle GLMM",
-        "simulation-based dispersion and excess-zero diagnostics",
-        "conditional/zero-process estimates and explicit model comparison",
-        "cross-classified random effects",
-        "observed-variable Bayesian DSEM",
-        "rank-normalized/folded R-hat, bulk/tail ESS and MCSE",
-        "prior/posterior predictive checks and prior sensitivity",
-        "bounded trace/density evidence and editable Excel appendix charts"
-      ]
-    },
-    {
-      "id": "experimental-design-workbench",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/factorial_ancova.R",
-        "engine/R/lib/experiment_posthoc.R",
-        "engine/R/lib/experimental_cluster_glm.R",
-        "engine/R/run_advanced_analysis.R",
-        "apps/api/app/api/routes/advanced.py",
-        "apps/web/src/components/advanced/ExperimentWizard.tsx"
-      ],
-      "outputs": [
-        "factorial ANOVA and ANCOVA",
-        "single-within repeated-measures and mixed designs",
-        "cluster-robust Gaussian GLM",
-        "Games-Howell, EMM, confidence intervals and planned contrasts",
-        "planned-contrast multiplicity correction within declared families"
-      ]
-    },
-    {
-      "id": "general-power-precision-workbench",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/power_analytic.R",
-        "engine/R/lib/power_t_test.R",
-        "engine/R/lib/power_monte_carlo.R",
-        "engine/R/run_advanced_analysis.R",
-        "apps/api/app/api/routes/advanced.py",
-        "apps/web/src/components/advanced/PowerWizard.tsx"
-      ],
-      "outputs": [
-        "regression f-squared and R-squared-change power",
-        "one-sample and two-independent-sample t-test power",
-        "balanced between-group ANOVA power",
-        "Monte Carlo power, MCSE and Wilson intervals",
-        "precision targets and MDES sensitivity"
-      ]
-    },
-    {
-      "id": "cross-sectional-multilevel-workbench",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/multilevel_aggregation.R",
-        "engine/R/run_advanced_analysis.R",
-        "apps/api/app/api/routes/advanced.py",
-        "apps/web/src/components/advanced/MultilevelWizard.tsx"
-      ],
-      "outputs": [
-        "ICC(1), ICC(2), design effect and rwg aggregation evidence",
-        "two-level Gaussian LMM with random intercept and limited random slopes"
-      ]
-    },
-    {
-      "id": "general-multiple-imputation-workbench",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/imputation_runner.R",
-        "engine/R/lib/mi_rubin.R",
-        "engine/R/run_advanced_analysis.R",
-        "apps/api/app/api/routes/advanced.py",
-        "apps/web/src/components/advanced/ImputationWizard.tsx"
-      ],
-      "outputs": [
-        "immutable MICE imputation datasets",
-        "type-aware imputation",
-        "per-imputation linear model fitting",
-        "SHA-256 binding to the declared substantive model",
-        "Rubin pooling with FMI and Barnard-Rubin degrees of freedom"
-      ]
-    },
-    {
-      "id": "advanced-questionnaire-measurement-workbench",
-      "sourceAssetPack": "ob-cb-expansion",
-      "status": "active",
-      "activePaths": [
-        "engine/R/lib/questionnaire_measurement_runner.R",
-        "engine/R/lib/esem_bifactor.R",
-        "engine/R/run_advanced_analysis.R",
-        "apps/api/app/api/routes/advanced.py",
-        "apps/web/src/components/advanced/QuestionnaireMeasurementBuilder.tsx"
-      ],
-      "outputs": [
-        "continuous ESEM with an auditable declared-construct target matrix",
-        "continuous or ordinal bifactor omega-h, ECV and PUC",
-        "binary 2PL or ordinal graded-response IRT",
-        "binary or ordinal item DIF with complete-case group alignment",
-        "advanced measurement result and export bundles"
-      ]
-    }
-  ],
   "commands": {
     "setup": "scripts/setup.ps1",
     "desktopInstall": "scripts/install-app.ps1",
@@ -343,14 +330,12 @@
     "development": "scripts/dev.ps1",
     "harness": "scripts/harness.ps1 -Mode Quick",
     "targetedHarness": "scripts/harness.ps1 -Mode Targeted -BaseRef HEAD~1",
-    "statisticalHarness": "scripts/harness.ps1 -Mode Statistical",
-    "test": "scripts/test.ps1",
+    "fullHarness": "scripts/harness.ps1 -Mode Full",
     "architectureCheck": "scripts/check-architecture.ps1",
     "rLockCheck": "scripts/check-r-lock.R",
     "pythonLockCheck": "scripts/check-python-lock.ps1",
     "pythonTypeCheck": "scripts/check-python-types.py",
     "dependencyAudit": "scripts/audit-dependencies.ps1",
-    "releaseEvidence": "scripts/release-evidence.py",
     "bundleBudget": "scripts/check-bundle-budget.mjs",
     "contractGeneration": "scripts/generate-contracts.ps1",
     "rRuntimeBenchmark": "scripts/benchmark-r-runtime.py",

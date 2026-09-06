@@ -157,7 +157,7 @@ calc_alpha <- function(data, item_ids) {
 # 4. 计算组合信度 (CR) 与平均方差提取值 (AVE)
 #
 # 命名说明：cfa_validity.R 另有一个面向构念列表的 calc_cr_ave（签名不同）。
-# 为避免同一 R 会话中后加载者静默覆盖前者（DEBT-146），SEM 路径使用独立命名。
+# 为避免同一 R 会话中后加载者静默覆盖前者，SEM 路径使用独立命名。
 calc_sem_cr_ave <- function(std_loadings) {
   sum_loadings_sq <- (sum(std_loadings))^2
   sum_residuals <- sum(1 - std_loadings^2)
@@ -209,7 +209,7 @@ calc_latent_reliability <- function(fit, data, latents) {
         cronbachAlpha = if (is.na(alpha_result$alpha)) NA_real_ else alpha_result$alpha,
         alphaSampleSize = if (is.na(alpha_result$n)) NA_integer_ else alpha_result$n,
         # 单因子等载荷测量下 McDonald's ω 与 CR 一致；含相关残差时不成立，
-        # 抑制为 null 并附来因（DEBT-146）。
+        # 抑制为 null 并附来因。
         mcdonaldOmega = if (cr_available) cr_ave$cr else NA_real_,
         compositeReliability = if (cr_available) cr_ave$cr else NA_real_,
         compositeReliabilityReason = if (cr_available) {

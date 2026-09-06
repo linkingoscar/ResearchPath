@@ -6,7 +6,7 @@ from io import BytesIO
 import numpy as np
 import pandas as pd
 import pytest
-from m3_helpers import _ensure_independent_context, client
+from model_test_helpers import _ensure_independent_context, client
 
 from app.settings import get_settings
 

@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "INVALID_CONTRAST_WEIGHTS",
-    "message": "Factor has fewer than 2 levels; cannot compute contrasts"
-  }
-}

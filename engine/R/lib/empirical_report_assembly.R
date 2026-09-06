@@ -25,9 +25,9 @@ if (!is.null(hierarchical_regression) && isTRUE(hierarchical_regression$requires
 publication_reasons <- unique(publication_reasons[nzchar(publication_reasons)])
 if (
   !is.null(study_plan_multiplicity) &&
-  isTRUE(global_multiplicity$legacyExecutionDerivedFamily)
+  isTRUE(global_multiplicity$executionDerivedFamily)
 ) {
-  publication_reasons <- unique(c(publication_reasons, "LEGACY_EXECUTION_DERIVED_MULTIPLICITY_FAMILY"))
+  publication_reasons <- unique(c(publication_reasons, "EXECUTION_DERIVED_MULTIPLICITY_FAMILY"))
 }
 if (
   isTRUE(global_multiplicity$declarationStatus == "typed") &&

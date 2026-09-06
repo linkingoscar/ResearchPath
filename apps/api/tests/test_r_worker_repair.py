@@ -42,7 +42,7 @@ def test_repair_does_not_block_cancellation_or_duplicate_reserved_slots(monkeypa
             repair = executor.submit(pool._repair_capacity)
             try:
                 assert entered.wait(2)
-                # While the new R worker has not become ready, removing an old
+                # While the replacement R worker is starting, removing the current
                 # worker must finish, and a second repair must not start slot 2.
                 duplicate = executor.submit(pool._repair_capacity)
                 duplicate.result(timeout=1)

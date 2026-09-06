@@ -56,7 +56,7 @@ def migrate_v1(
             )
 
     estimand_label = str(payload.get("estimand", "")).strip()
-    estimand_id = "estimand_legacy"
+    estimand_id = "estimand_recovered"
     robustness_declarations: list[dict[str, object]] = []
     robustness_ids: list[str] = []
     raw_robustness = payload.get("robustnessAnalyses", [])

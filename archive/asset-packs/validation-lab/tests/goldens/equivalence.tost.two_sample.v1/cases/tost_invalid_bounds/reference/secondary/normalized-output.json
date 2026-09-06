@@ -1,9 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "TOST_INVALID_BOUNDS",
-    "message": "The lower equivalence bound must be strictly less than the upper bound",
-    "mustNotReturnEstimates": true,
-    "mustNotFallback": true
-  }
-}

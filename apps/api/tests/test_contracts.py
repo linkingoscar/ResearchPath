@@ -88,7 +88,7 @@ def test_advanced_schema_rejects_unimplemented_solve_for() -> None:
         validate_contract(payload, settings.advanced_spec_schema_path)
 
 
-def test_advanced_schema_rejects_removed_precision_legacy_fields() -> None:
+def test_advanced_schema_rejects_unsupported_precision_fields() -> None:
     settings = get_settings()
     payload = _advanced_power_schema(settings)
     payload["lowBound"] = 0

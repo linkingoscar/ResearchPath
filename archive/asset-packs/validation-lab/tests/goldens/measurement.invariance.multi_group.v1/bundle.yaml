@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: measurement.invariance.multi_group.v1
-methodFamily: measurement
-cases:
-  - invariance_two_group_continuous
-  - invariance_three_group_partial
-  - invariance_unbalanced_groups_boundary
-  - invariance_missing_grouping_failure

@@ -69,7 +69,7 @@ def _job_status(result: JsonObject) -> str:
 
 
 def apply_status_model(result: JsonObject) -> JsonObject:
-    """Derive statistical status without changing the legacy run.status alias."""
+    """Derive statistical status while preserving the public run.status alias."""
     top_reasons = _reason_codes(result)
     sem_result = result.get("semResult")
     dsem_result = result.get("diaryMultilevel")

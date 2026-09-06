@@ -1,5 +1,4 @@
-# Compatibility alias retained for existing callers.  The implementation lives
-# exclusively in inference_covariance.R.
+# Public helper alias; the implementation lives in inference_covariance.R.
 hc3_covariance <- function(fit) researchpath_hc3_covariance(fit)
 
 coefficient_rows <- function(fit, label_lookup, robust_se = NULL, confidence_level = 0.95, robust_covariance = NULL) {
@@ -154,7 +153,7 @@ regression_sensitivity_report <- function(adjusted_fit, unadjusted_fit, label_lo
 }
 
 # ---------------------------------------------------------------------------
-# Binary Logistic Regression & Average Marginal Effects (AME) (WP-CORE-Q-05)
+# Binary Logistic Regression & Average Marginal Effects (AME)
 # ---------------------------------------------------------------------------
 
 fit_binary_logistic_with_ame <- function(

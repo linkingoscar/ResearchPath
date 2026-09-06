@@ -326,7 +326,7 @@ class ResultProvenanceResponse(_StrictResponse):
     standardErrors: Literal["classical", "hc3", "standard", "robust", "bootstrap"]
     bootstrapReplicates: int = Field(ge=0)
     # 仅在 bootstrap 实际执行时为正整数种子；否则为 null（与
-    # result-bundle.schema.json 的 oneOf [integer>=1, null] 同批放开，DEBT-149）。
+    # result-bundle.schema.json 同步允许 oneOf [integer>=1, null]。
     seed: int | None = Field(default=None, ge=1)
     contextHash: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     sampleVersionId: str | None = None

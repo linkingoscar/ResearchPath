@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: experiment.emmeans.planned_contrast.v1
-methodFamily: experiment
-cases:
-  - contrast_balanced_one_way
-  - contrast_ancova_nonorthogonal
-  - contrast_zero_weights_boundary
-  - contrast_invalid_weights_failure

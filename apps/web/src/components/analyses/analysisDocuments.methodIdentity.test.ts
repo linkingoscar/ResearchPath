@@ -22,7 +22,7 @@ const dataset = {
   dictionary: { version: 1, confirmedCount: 0, totalCount: 0, status: 'draft' },
 } as DatasetVersion
 
-const legacyKey = 'researchpath.empirical.runs.v1:dataset_method_identity:null'
+const recoveryKey = 'researchpath.empirical.runs.v1:dataset_method_identity:null'
 
 beforeEach(() => localStorage.clear())
 
@@ -48,15 +48,15 @@ describe('method-scoped empirical AnalysisDocuments', () => {
     expect([lmm.methodId, glmm.methodId, dsem.methodId]).toEqual(['diary.lmm', 'diary.glmm', 'diary.dsem'])
   })
 
-  it('reuses a legacy basic empirical document when its stored method identity already matches', () => {
-    localStorage.setItem(legacyKey, JSON.stringify([
+  it('reuses a recovered empirical document when its stored method identity already matches', () => {
+    localStorage.setItem(recoveryKey, JSON.stringify([
       { id: 'run_desc_1', procedure: 'descriptives', createdAt: '2026-09-03T01:00:00Z' },
     ]))
-    const legacy = loadEmpiricalAnalysisIndex(dataset, null).documents[0]
+    const recovered = loadEmpiricalAnalysisIndex(dataset, null).documents[0]
     const reopened = ensureEmpiricalAnalysisDocument(dataset, null, 'descriptives', 'empirical.overview.descriptives')
 
-    expect(legacy.methodId).toBe('empirical.overview.descriptives')
-    expect(reopened.id).toBe(legacy.id)
+    expect(recovered.methodId).toBe('empirical.overview.descriptives')
+    expect(reopened.id).toBe(recovered.id)
     expect(loadEmpiricalAnalysisIndex(dataset, null).documents.filter((document) => document.procedure === 'descriptives')).toHaveLength(1)
   })
 

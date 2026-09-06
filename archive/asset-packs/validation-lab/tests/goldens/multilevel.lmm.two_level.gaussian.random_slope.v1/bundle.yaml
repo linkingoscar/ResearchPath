@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: multilevel.lmm.two_level.gaussian.random_slope.v1
-methodFamily: multilevel
-cases:
-  - lmm_random_slope_typical
-  - lmm_random_slope_unbalanced
-  - lmm_singular_covariance_boundary
-  - lmm_missing_cluster_id_failure

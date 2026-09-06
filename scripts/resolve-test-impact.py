@@ -96,8 +96,8 @@ def decode_git_paths(raw: bytes) -> list[str]:
     ``git --name-only -z`` already returns raw, unquoted bytes, which handles
     Unicode, spaces, backslashes and quotes without touching ``core.quotePath``.
     The C-style quoted fallback below keeps the decoder deterministic when a
-    caller (or another tool) still hands it ``core.quotePath`` output such as
-    ``"docs/09-\344\277\256..."``.
+    caller (or another tool) still hands it ``core.quotePath`` output containing
+    octal-escaped UTF-8 bytes.
     """
 
     def decode_quoted(part: bytes) -> bytes:

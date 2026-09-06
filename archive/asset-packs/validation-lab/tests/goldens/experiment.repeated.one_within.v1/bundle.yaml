@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: experiment.repeated.one_within.v1
-methodFamily: experiment
-cases:
-  - repeated_balanced_one_within
-  - repeated_sphericity_violation
-  - repeated_near_perfect_correlation_boundary
-  - repeated_missing_cell_failure

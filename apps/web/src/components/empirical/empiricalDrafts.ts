@@ -82,12 +82,12 @@ export function migrateEmpiricalDraftToAnalysis(
   const scopedDraft = readEmpiricalDraft(scopedKey, procedure)
   if (scopedDraft) return scopedDraft
 
-  const legacyKey = empiricalDraftKey(dataset, measurement, context)
-  const legacyDraft = readEmpiricalDraft(legacyKey, procedure)
-  if (!legacyDraft) return null
+  const recoveryKey = empiricalDraftKey(dataset, measurement, context)
+  const recoveredDraft = readEmpiricalDraft(recoveryKey, procedure)
+  if (!recoveredDraft) return null
 
-  saveEmpiricalDraft(scopedKey, legacyDraft)
-  return legacyDraft
+  saveEmpiricalDraft(scopedKey, recoveredDraft)
+  return recoveredDraft
 }
 
 export function cloneEmpiricalDraftToAnalysis(

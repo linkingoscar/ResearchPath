@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "MISSING_REPEATED_MEASUREMENT",
-    "message": "Repeated measures design contains missing cells or incomplete subject observations"
-  }
-}

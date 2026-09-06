@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: multilevel.mediation.two_level.v1
-methodFamily: multilevel
-cases:
-  - mediation_balanced_typical
-  - mediation_unbalanced_complex
-  - mediation_zero_indirect_boundary
-  - mediation_single_cluster_failure

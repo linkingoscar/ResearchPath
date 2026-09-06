@@ -5,7 +5,7 @@ if (!exists("researchpath_seed", mode = "function", inherits = TRUE)) {
   }
 }
 
-# PROCESS 5.0 compatibility boundary
+# PROCESS 5.0 supported boundary
 #
 # The product runner is an independent implementation. The official macro is
 # not distributed with ResearchPath; a user may provide a local copy only when
@@ -84,7 +84,7 @@ process5_standard_guard <- function(spec, model_number, script_dir = NULL) {
   if (!is.finite(model_number) || model_number < 1L || model_number > 92L) {
     return(list(valid = FALSE, errors = "PROCESS 5.0 model number is invalid"))
   }
-  # script_dir is retained for compatibility with existing callers. Runtime
+  # script_dir is accepted by the public helper signature. Runtime
   # execution never depends on the optional external validation oracle.
   mediator_ids <- process5_node_ids(spec, "m")
   binary_mediator_error <- process5_binary_mediator_error(spec)

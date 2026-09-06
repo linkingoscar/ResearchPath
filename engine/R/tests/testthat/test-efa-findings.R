@@ -1,13 +1,13 @@
-# F-002 / F-003 / F-004 regression tests for the EFA chain.
+# Regression tests for the EFA chain.
 #
-# F-002: parallel analysis runs in the same correlation world as the main EFA
+# Parallel analysis runs in the same correlation world as the main EFA
 #        (polychoric threshold-preserving simulation for ordinal items); the
 #        output carries correlationType/simulationType metadata and never
 #        silently degrades to a Pearson null distribution.
-# F-003: split validation refits the user's estimator spec (correlation,
+# Split validation refits the user's estimator spec (correlation,
 #        extraction, rotation, item scale) through the shared pipeline; an
 #        unsupported combination is reported as unavailable, never swapped.
-# F-004: numerical fallbacks (inversion, communality initialization, rotation,
+# Numerical fallbacks (inversion, communality initialization, rotation,
 #        extraction, correlation) surface as structured
 #        {stage, requested, used, reason} records in the result document.
 
@@ -41,7 +41,7 @@ efa_ordinal_fixture <- local({
 })
 
 # ---------------------------------------------------------------------------
-# F-002: correlation-aware parallel analysis
+# Correlation-aware parallel analysis
 # ---------------------------------------------------------------------------
 
 test_that("continuous parallel analysis reports pearson metadata and is reproducible", {
@@ -119,7 +119,7 @@ test_that("unknown correlation types are rejected", {
 })
 
 # ---------------------------------------------------------------------------
-# F-003: split validation reuses the user's estimator
+# Split validation reuses the user's estimator
 # ---------------------------------------------------------------------------
 
 test_that("split validation refits the user's estimator spec via the shared pipeline", {
@@ -232,7 +232,7 @@ test_that("split validation rejects mismatched executed estimators", {
 })
 
 # ---------------------------------------------------------------------------
-# F-004: structured numerical fallback disclosure
+# Structured numerical fallback disclosure
 # ---------------------------------------------------------------------------
 
 test_that("PAF discloses SMC communality fallback on a singular correlation matrix", {

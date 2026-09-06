@@ -1,9 +1,0 @@
-{
-  "status": "failed",
-  "failure": {
-    "reasonCode": "GAMES_HOWELL_GROUP_REQUIRES_TWO_OBSERVATIONS",
-    "message": "Each Games-Howell group requires at least two observations",
-    "mustNotReturnEstimates": true,
-    "mustNotFallback": true
-  }
-}

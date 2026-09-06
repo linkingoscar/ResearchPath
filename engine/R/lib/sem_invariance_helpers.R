@@ -1,6 +1,6 @@
 # SEM 多组等值性辅助函数库 (sem_invariance_helpers.R)
 #
-# 从 lib/sem_analysis.R 行为保持地搬移（DEBT-153 后续：架构门禁 800 行上限）。
+# SEM 等值性辅助函数，保持与主分析入口一致的结果契约。
 # 原为闭包实现，现改为显式参数；调用方在 sem_analysis.R 等值性分支内。
 
 # 收敛失败/空拟合时返回与 get_fit_indices 结构一致的 NA 骨架，

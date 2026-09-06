@@ -1,5 +1,5 @@
 # esem_bifactor.R
-# WP-MEASURE-05: ESEM, Bifactor Model, IRT & DIF Analysis
+# ESEM, Bifactor Model, IRT & DIF Analysis
 
 measurement_execution <- function(
   requested_method,

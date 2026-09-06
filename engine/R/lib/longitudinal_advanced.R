@@ -1,4 +1,4 @@
-# ResearchPath R Engine - RI-CLPM & Latent Growth Modeling (WP-LONG-01~03)
+# ResearchPath R Engine - RI-CLPM & Latent Growth Modeling
 
 fit_riclpm_model <- function(data, x_waves, y_waves, estimator = "MLR", missing = "fiml") {
   suppressPackageStartupMessages(library(lavaan))

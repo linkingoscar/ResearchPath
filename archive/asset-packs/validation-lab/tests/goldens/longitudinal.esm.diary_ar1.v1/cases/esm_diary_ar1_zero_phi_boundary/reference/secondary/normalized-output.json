@@ -1,9 +1,0 @@
-{
-  "ar1_phi": -0.15179295534771226,
-  "within_variance": 1.9296257306949232,
-  "between_variance": 0.46548865987996607,
-  "fixed_intercept": 5.3050538401606095,
-  "diagnostics": {
-    "converged": true
-  }
-}

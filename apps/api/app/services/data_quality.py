@@ -469,7 +469,7 @@ def run_data_quality(
     return payload
 
 
-# Kept as a compatibility barrel for existing route imports; sample creation
+# Facade used by route imports; sample creation
 # and pagination live in their own service to keep the quality metric module
 # within the repository's file-size boundary.
 from app.services.data_quality_samples import (  # noqa: E402, F401

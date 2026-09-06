@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from _empirical_center_helpers import _await_empirical_job
-from m3_helpers import _model_dataset, client
+from model_test_helpers import _model_dataset, client
 from openpyxl import load_workbook
 
 from app.api.dto.empirical_spec_builder import build_empirical_analysis_options
@@ -105,7 +105,7 @@ def test_scope_validation_rejects_other_methods_and_bad_variables() -> None:
     assert options["analysisVariableIds"] == ["x", "y"]
 
 
-def test_legacy_requests_still_declare_bundle_capabilities() -> None:
+def test_combined_requests_declare_bundle_capabilities() -> None:
     assert empirical_capability_slices({}) == (
         "empirical.cross_sectional.overview", "empirical.cross_sectional.measurement"
     )

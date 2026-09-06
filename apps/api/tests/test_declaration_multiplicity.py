@@ -3,7 +3,7 @@ from __future__ import annotations
 import time
 from typing import Any, Mapping
 
-from m3_helpers import _model_dataset, client
+from model_test_helpers import _model_dataset, client
 
 from app.contracts import validate_contract
 from app.main import app

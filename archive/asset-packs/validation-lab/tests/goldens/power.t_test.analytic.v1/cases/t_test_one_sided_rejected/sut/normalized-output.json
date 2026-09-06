@@ -1,9 +1,0 @@
-{
-  "failure": {
-    "status": "failed",
-    "reasonCode": "UNSUPPORTED_ALTERNATIVE",
-    "message": "Only two-sided t-test power is supported",
-    "mustNotReturnEstimates": true,
-    "mustNotFallback": true
-  }
-}

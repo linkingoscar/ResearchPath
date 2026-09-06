@@ -342,7 +342,7 @@ out_path <- file.path(out_dir, "process-goldens.json")
 write_json(goldens, path = out_path, auto_unbox = TRUE, pretty = TRUE, null = "null", digits = NA)
 cat("Wrote ", out_path, "\n", sep = "")
 
-# --- Additional legacy templates (5/15/21/22/58/59) ---------------------------
+# --- Additional predefined templates (5/15/21/22/58/59) -----------------------
 # Kept in a second file so each golden file stays within the architecture
 # 800-line ceiling. Same synthetic data, seed and macro.
 
@@ -352,11 +352,11 @@ m21_lines <- run_macro(21, c("m1"), bc = 0, w_flag = TRUE, z_flag = TRUE)
 m22_lines <- run_macro(22, c("m1"), bc = 0, w_flag = TRUE, z_flag = TRUE)
 m58_lines <- run_macro(58, c("m1"), bc = 0, w_flag = TRUE)
 m59_lines <- run_macro(59, c("m1"), bc = 0, w_flag = TRUE)
-# Model 60 exercises the generic estimator path (non-legacy catalog number):
+# Model 60 exercises the generic estimator path beyond the predefined set:
 # W and Z moderate the a path, W moderates the b path.
 m60_lines <- run_macro(60, c("m1"), bc = 0, w_flag = TRUE, z_flag = TRUE)
 # Models 28 (a-W, b-Z, direct-W) and 29 (+ direct-Z) complete the generic
-# estimator's coverage of the remaining catalog families (DEBT-118 residual).
+# estimator's coverage of the remaining catalog families.
 m28_lines <- run_macro(28, c("m1"), bc = 0, w_flag = TRUE, z_flag = TRUE)
 m29_lines <- run_macro(29, c("m1"), bc = 0, w_flag = TRUE, z_flag = TRUE)
 

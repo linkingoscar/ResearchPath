@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: power.regression.f2.analytic.v1
-methodFamily: power
-cases:
-- regression_f2_standard
-- regression_f2_high_u
-- regression_f2_zero_effect
-- regression_f2_invalid_n

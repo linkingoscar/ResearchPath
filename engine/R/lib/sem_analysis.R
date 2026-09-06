@@ -97,7 +97,7 @@ se_param <- spec$estimation$standardErrors
 if (is.null(se_param) || se_param == "classical") se_param <- "standard"
 if (se_param == "hc3") se_param <- "robust"
 # 实际执行的 se 设置（lavaan se= 参数），provenance 直接记录该值，
-# 不再由稳健卡方是否存在反推（DEBT-149）。
+# 不由稳健卡方是否存在反推。
 se_executed <- switch(se_param,
   "bootstrap" = "bootstrap",
   "robust" = "robust",
@@ -212,7 +212,7 @@ sem_result <- list(
 )
 # 可靠性诊断类警告只抑制具体信度指标（CR/ω 置 null），不代表模型估计
 # 失败或异常解；路径、拟合与样本流证据不受影响，因此不得把整个结果
-# 打成不可发布（DEBT-146）。Heywood/非正定/不收敛仍走原门禁。
+# 标记为不可发布。Heywood、非正定与不收敛仍走同一检查。
 reliability_diagnostic_codes <- c("SEM_CR_SUPPRESSED_CORRELATED_RESIDUALS")
 sem_publication_reasons <- unique(vapply(
   Filter(
@@ -302,7 +302,7 @@ if (run_invariance && !is.null(group_var_col) && group_var_col %in% names(analys
   }
 
   # 先拟合 configural：WLSMV 部分等值的阈值参数名必须与模型实际自由阈值
-  # 一致。以数据 unique 值数近似会在类别缺失时拼错 group.partial（DEBT-150），
+  # 一致。以数据 unique 值数近似会在类别缺失时拼错 group.partial，
   # 因此阈值计数取自 configural 拟合的 parameterTable。
   fit_conf <- safe_sem(NULL, NULL)
   conf_param_table <- tryCatch(parameterTable(fit_conf), error = function(e) NULL)
@@ -546,7 +546,7 @@ result <- list(
     missingMethodExecuted = missing_param,
     bootstrapReplicates = if (identical(se_param, "bootstrap")) as.integer(spec$estimation$bootstrap$replicates) else 0L,
     # 仅在 bootstrap 实际执行时报告种子；否则为 null（NA 经 na="null" 序列化），
-    # 不再用固定占位值误导复现消费者（DEBT-149）。
+    # 不使用固定占位值误导复现消费者。
     seed = if (identical(se_param, "bootstrap")) researchpath_seed(spec$estimation$bootstrap$seed) else NA_integer_
   )
 )

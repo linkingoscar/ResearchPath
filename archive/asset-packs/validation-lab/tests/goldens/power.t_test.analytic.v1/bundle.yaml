@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: power.t_test.analytic.v1
-methodFamily: power
-cases:
-  - t_test_two_sample
-  - t_test_unbalanced_negative_effect
-  - t_test_zero_effect_boundary
-  - t_test_one_sided_rejected

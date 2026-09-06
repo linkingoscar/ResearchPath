@@ -1,5 +1,0 @@
-schemaVersion: 1
-capabilityId: measurement.irt.dif.v1
-methodFamily: measurement
-cases:
-  - irt_2pl_dif

@@ -57,7 +57,7 @@ def scan(
         ceiling = allowed(path, int(maximum))
         if lines > ceiling:
             errors.append(
-                f"{relative_path} has {lines} lines; compatibility entrypoints "
+                f"{relative_path} has {lines} lines; facade entrypoints "
                 f"must stay under {ceiling}."
             )
 
@@ -66,7 +66,12 @@ def scan(
         if not source_root.exists():
             continue
         for path in source_root.rglob("*"):
-            if path.is_file() and path.name not in exclude_names:
+            if (
+                path.is_file()
+                and path.name not in exclude_names
+                and "__pycache__" not in path.parts
+                and path.suffix != ".pyc"
+            ):
                 lines = count_lines(path)
                 ceiling = allowed(path, int(limits["hardCeiling"]))
                 if lines > ceiling:

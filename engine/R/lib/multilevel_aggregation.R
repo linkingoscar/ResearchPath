@@ -1,4 +1,4 @@
-# ResearchPath R Engine - Multilevel Aggregation Evidence & ICC/rwg (WP-AGG-01)
+# ResearchPath R Engine - Multilevel Aggregation Evidence & ICC/rwg
 #
 # The advanced workbench delegates the statistical calculation to the same
 # implementation used by the empirical workspace.  This prevents rwg(j) from

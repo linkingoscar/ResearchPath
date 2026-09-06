@@ -25,17 +25,17 @@ describe('empiricalRunHistory method identity compatibility', () => {
     ])
   })
 
-  it('keeps legacy history entries without methodId readable', () => {
+  it('keeps stored history entries without methodId readable', () => {
     localStorage.setItem(key, JSON.stringify([
       {
-        id: 'run_legacy',
+        id: 'run_recovered',
         procedure: 'descriptives',
         createdAt: '2026-09-03T10:00:00Z',
       },
     ]))
 
     expect(readEmpiricalHistory(key)).toEqual([
-      expect.objectContaining({ id: 'run_legacy', procedure: 'descriptives' }),
+      expect.objectContaining({ id: 'run_recovered', procedure: 'descriptives' }),
     ])
     expect(readEmpiricalHistory(key)[0].methodId).toBeUndefined()
   })

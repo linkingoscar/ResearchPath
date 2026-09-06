@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: multilevel.icc.two_level.v1
-methodFamily: multilevel
-cases:
-  - icc_two_level_balanced
-  - icc_two_level_unbalanced
-  - icc_two_level_zero_variance
-  - icc_two_level_single_cluster

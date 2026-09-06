@@ -7,7 +7,7 @@ from zipfile import ZipFile
 import numpy as np
 import pandas as pd
 import pytest
-from m3_helpers import _model_dataset, client
+from model_test_helpers import _model_dataset, client
 
 from app.settings import get_settings
 

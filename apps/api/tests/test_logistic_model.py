@@ -5,7 +5,7 @@ from io import BytesIO
 import numpy as np
 import pandas as pd
 import pytest
-from m3_helpers import _await_analysis, client
+from model_test_helpers import _await_analysis, client
 
 from app.settings import get_settings
 

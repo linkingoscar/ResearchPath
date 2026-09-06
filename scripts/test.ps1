@@ -5,8 +5,7 @@ param(
     # adding avoidable R subprocess contention.
     [int]$PytestWorkers = 4,
     [switch]$NoLockCache,
-    [switch]$NoNumericBaselineCache,
-    [ValidateSet('Full', 'Release')][string]$HarnessMode = 'Full'
+    [switch]$NoNumericBaselineCache
 )
 
 $ErrorActionPreference = 'Stop'
@@ -35,7 +34,7 @@ function Write-TimingEvidence {
     $record = [ordered]@{
         schemaVersion = '1.0.0'
         recordedAt = [DateTimeOffset]::Now.ToString('o')
-        mode = $HarnessMode
+        mode = 'Full'
         commit = $commit
         dirty = $dirty
         pytestWorkers = $PytestWorkers

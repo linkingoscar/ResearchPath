@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from m3_helpers import _model_dataset, _spec, client
+from model_test_helpers import _model_dataset, _spec, client
 
 
 @pytest.mark.parametrize("family,node_count", [("ols", 0), ("ols", 1), ("ols", 2), ("sem", 0)])

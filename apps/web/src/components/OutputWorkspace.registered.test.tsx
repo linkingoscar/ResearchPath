@@ -89,7 +89,7 @@ describe('OutputWorkspace registered model and advanced runs', () => {
     expect(screen.getByText('简单中介（PROCESS Model 4）')).toBeInTheDocument()
     expect(screen.getByText('组间析因方差分析')).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: '还没有运行任何分析' })).not.toBeInTheDocument()
-    expect(screen.getAllByText('基于旧设置')).toHaveLength(1)
+    expect(screen.getAllByText('基于非当前设置')).toHaveLength(1)
   })
 
   it('searches registered runs together with the project output index', () => {

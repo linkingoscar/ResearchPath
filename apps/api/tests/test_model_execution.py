@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from _model_execution_helpers import _moderated_mediation_median_reference, _process_percentile
-from m3_helpers import _await_analysis, _model_dataset, _spec, client
+from model_test_helpers import _await_analysis, _model_dataset, _spec, client
 from moderation_assertions import assert_unified_moderation
 
 from app.settings import get_settings
@@ -475,13 +475,13 @@ def test_seeded_bootstrap_is_reproducible_and_within_performance_budget() -> Non
     assert duration < 30, f"两次 1000 次 bootstrap 用时 {duration:.2f}s，超过 30s 门槛"
 
 
-def test_5000_replication_bootstrap_meets_mvp_performance_budget() -> None:
+def test_5000_replication_bootstrap_meets_performance_budget() -> None:
     dataset, measurement = _model_dataset()
     model = _spec("model_7", dataset, measurement)
     model["estimation"]["bootstrap"]["replicates"] = 5000
     frozen = client.post(
         f"/api/v1/datasets/{dataset['id']}/models/{model['modelId']}/freeze",
-        json={"model_spec": model, "override_reason": "MVP 性能门槛验证。"},
+        json={"model_spec": model, "override_reason": "性能预算验证。"},
     ).json()
     started_at = time.monotonic()
     state = _await_analysis(

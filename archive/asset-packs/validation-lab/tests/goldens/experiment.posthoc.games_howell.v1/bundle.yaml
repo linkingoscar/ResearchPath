@@ -1,8 +1,0 @@
-schemaVersion: 1
-capabilityId: experiment.posthoc.games_howell.v1
-methodFamily: experiment
-cases:
-- games_howell_unequal_var
-- games_howell_unbalanced_n
-- games_howell_zero_diff
-- games_howell_insufficient_sample

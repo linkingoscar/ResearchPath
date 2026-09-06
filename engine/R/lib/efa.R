@@ -13,7 +13,7 @@ efa_lib_dir <- if (exists("script_dir", mode = "character", inherits = TRUE) && 
 }
 source(file.path(efa_lib_dir, "efa_helpers.R"), local = environment())
 
-# Parallel analysis replicate callback (F-002). `simulation` draws one
+# Parallel analysis replicate callback. `simulation` draws one
 # null-hypothesis dataset (continuous normal or threshold-preserving ordinal)
 # and `eigenvalue_function` maps it to eigenvalues in the SAME correlation
 # world as the observed data (Pearson or polychoric), so the null distribution
@@ -48,7 +48,7 @@ researchpath_make_parallel_analysis_callback <- function(n, p, simulation, eigen
   }), envir = callback_environment)
 }
 
-# Structured numerical-fallback disclosure (F-004). Any fallback that changes
+# Structured numerical-fallback disclosure. Any fallback that changes
 # the numerical meaning of an estimator must surface in the result document as
 # {stage, requested, used, reason}, never only in a log line. The collector is
 # an environment so recording works from nested closures (tryCatch handlers,
@@ -234,7 +234,7 @@ run_split_validation <- function(data, factor_count, rotation = "promax", seed =
     return(list(available = FALSE, reason = "split_validation_not_supported_for_this_estimator"))
   }
 
-  # F-003: the train/holdout splits reuse the SAME model specification as the
+  # The train/holdout splits reuse the SAME model specification as the
   # full fit — same correlation method (polychoric for ordinal, Pearson for
   # continuous), same extraction method, same rotation, same item scale — via
   # the shared run_efa_with_method pipeline. A combination that cannot be
@@ -368,7 +368,7 @@ run_efa_with_method <- function(data, correlation, n_obs, factor_count, method =
   requested_correlation_type <- if (identical(item_scale, "ordinal")) "polychoric" else "pearson"
   executed_correlation_type <- requested_correlation_type
 
-  # Determine appropriate correlation matrix (F-004: a correlation-world
+  # Determine appropriate correlation matrix (a correlation-world
   # fallback is disclosed as a structured numerical fallback, never silent).
   cor_matrix <- if (identical(item_scale, "ordinal")) {
     if (requireNamespace("lavaan", quietly = TRUE)) {
@@ -545,7 +545,7 @@ run_paf <- function(R, nfactors, rotation = "promax", max_iter = 100L, tol = 1e-
 
   rownames(loadings) <- rownames(R)
 
-  # Apply rotation (F-004: rotation failure falls back to unrotated loadings
+  # Apply rotation (rotation failure falls back to unrotated loadings
   # and is disclosed as a structured numerical fallback).
   if (nfactors > 1 && identical(rotation, "promax")) {
     rot <- tryCatch(

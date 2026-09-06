@@ -11,7 +11,6 @@ ROOT = Path(__file__).resolve().parents[3]
 
 def test_unified_empirical_catalog_covers_every_executable_advanced_slice() -> None:
     catalog = (ROOT / "docs" / "07-能力矩阵与路线图.md").read_text(encoding="utf-8")
-    assert "状态日期：2026-08-24" in catalog
     assert "specs/capability-evidence.json" in catalog
     assert "not_formally_frozen" in catalog
     assert all(
@@ -72,7 +71,6 @@ def test_catalog_method_claims_match_registry_schema_and_manifest() -> None:
     schema = json.loads(
         (ROOT / "specs" / "advanced-analysis-spec.schema.json").read_text(encoding="utf-8")
     )
-    manifest = json.loads((ROOT / "project.manifest.json").read_text(encoding="utf-8"))
     measurement = next(
         capability
         for capability in advanced_analysis_registry.capabilities()
@@ -95,13 +93,8 @@ def test_catalog_method_claims_match_registry_schema_and_manifest() -> None:
             "当前未接入操纵检验、基线平衡结论和 CONSORT 样本流",
         )
     )
-    active_paths = {
-        path
-        for restored_slice in manifest["restoredAssetSlices"]
-        for path in restored_slice["activePaths"]
-    }
-    assert "engine/R/lib/experiment_protocol.R" not in active_paths
     assert not (ROOT / "engine" / "R" / "lib" / "experiment_protocol.R").exists()
+    manifest = json.loads((ROOT / "project.manifest.json").read_text(encoding="utf-8"))
     assert any(
         "quasi-experimental causal identification" in item
         for item in manifest["productScope"]["deferred"]

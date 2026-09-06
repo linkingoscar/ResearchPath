@@ -1,8 +1,0 @@
-{
-  "apiMaxRelativeToBaseline": 0.75,
-  "fullMaxRelativeToBaseline": 0.70,
-  "quickMaxRelativeToOldFull": 0.25,
-  "coverageMinimum": 80.4844,
-  "flakyRunsAllowedInFive": 0,
-  "rProcessStartMaxRelativeToBaseline": 0.50
-}
