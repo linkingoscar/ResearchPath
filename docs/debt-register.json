@@ -2730,23 +2730,27 @@
       "category": "test-infrastructure",
       "priority": "P2",
       "title": "公开数据 oracle 测试依赖 output/validation-datasets 外部数据包,CI 无该数据时整组 skip,门禁未覆盖真实数据对照",
-      "status": "closed",
+      "status": "implemented_pending_verification",
       "ownerRole": "backend",
       "targetMilestone": "next-release",
       "evidence": [
         "原状:test-public-data-oracle.R 在 hayes 数据缺失时整组 skip;output/* 被 .gitignore 排除,ci.yml 的 Full 门禁不携带验证数据包",
         "2026-08-14 已实施:新增 scripts/fetch-public-validation-data.ps1(固定 URL + 固定 SHA-256 8459974F…,已存在且哈希一致时幂等跳过,不一致即删除重下,哈希不符直接 fail);ci.yml 在依赖安装后、质量门禁前新增 'Fetch public validation data pack (SHA-256 pinned)' 步骤,使 test.ps1 内的公开数据 oracle 实际执行",
         "2026-08-14 本地演练(模拟 CI 步骤):删除本地数据包 → 运行 fetch 脚本(真实下载 100,701 字节、SHA-256 校验通过、解压 7 个 .sav)→ test-public-data-oracle.R 与 test-public-data-crosssectional.R 由 skip 变为实际执行且全部通过;布局统一为单层 output/validation-datasets/hayes/hayes2022data/",
-        "剩余待验证项:GitHub Actions runner 上的真实执行确认需下一次 push 后的 CI 运行"
+        "剩余待验证项:GitHub Actions runner 上的真实执行确认需下一次 push 后的 CI 运行",
+        "2026-09-06：连续 hosted runs 34007258315、34008205500、34009410185 与 34010498107 均在项目测试前被 Hayes 数据站的 RemoteCertificateNameMismatch 阻断；裸域名和 www 主机名结果相同，属于外部 TLS 可用性回归而非产品测试失败。",
+        "2026-09-06：外部数据下载改为仅在 workflow_dispatch 执行；push/PR Full 不再依赖该主机，相关 testthat 用例继续显式显示资源缺失 skip。固定 URL、SHA-256 与 oracle 断言没有删除或放宽。"
       ],
       "acceptance": [
-        "CI 增加按 SHA-256 校验并缓存官方 hayes2022data.zip 的步骤,使公开数据 oracle 在门禁中实际执行;或在仓库内放置经许可的最小化数据切片——已实施(见证据),待 CI 运行确认",
-        "数据不可用时的 skip 状态在 CI 输出中显式可见,而非静默通过——fetch 步骤哈希不符或下载失败即 fail,不会静默 skip"
+        "显式 workflow_dispatch 外部验证必须按 SHA-256 校验官方 hayes2022data.zip 并实际执行公开数据 oracle；下载、证书或哈希失败均直接失败。",
+        "push/PR Full 不依赖第三方数据站可用性，资源缺失的公开数据用例必须在 R 输出中显式显示 skip，不能冒充已重跑外部验证。",
+        "上游 TLS 恢复或取得明确再分发许可的最小数据切片后，至少一次手动外部验证完整成功再关闭。"
       ],
       "closureEvidence": [
         "GitHub Actions run 31934324642（master push 8a161cc）成功：'Fetch public validation data pack (SHA-256 pinned)' 输出 'Public validation data fetched, verified and extracted.'，步骤成功后质量门禁通过",
         "同 run 日志显示 test-public-data-oracle.R 输出 'public-data-oracle: …'（真实执行，非 S/skip）且 R testthat、API 585 passed/1 skipped + serial、Web 45 files/130 tests、Playwright 7/7、生产构建与 bundle budget 全部 success；其他依赖不同数据包的 public-data tests 以显式 Reason 列出 skip，未静默通过",
-        "DEBT-119 两条 acceptance 均满足，状态关闭"
+        "2026-08-14 时 DEBT-119 两条 acceptance 均满足并关闭；2026-09-06 因上游证书回归重新打开，历史成功证据保留但不代替当前外部重跑。",
+        "默认质量与外部数据验证已经解耦为同一 workflow 的 push/PR 与 workflow_dispatch 两种触发，不新增重复工作流或 required check。"
       ]
     },
     {
@@ -4745,7 +4749,8 @@
         "现有其他 E2E 多使用 1440/390，未形成 PRD 指定 1024/760/420 三档的系统性工作区回归。",
         "2026-09-05：prd-workbench E2E 新增 1024/760/420 三档 Data、Analyze 方法目录与 Output 工作区无横向溢出和严重无障碍检查；专用配置与历史结果已有 390px 路径，但尚未在三档逐类复跑，因此保持 open。",
         "2026-09-06：现有实证、PROCESS、SEM 与描述统计后 Output 历史真实旅程均复用统一三断点助手，逐档检查主操作可见可聚焦、无页面横向溢出与严重无障碍问题；没有增加重复旅程或新 CI 门禁。",
-        "2026-09-06：PR #5 已 squash 合并到 main（8190b7e63d5529de8e11e88a7660b2462eeec4d3）。对应 hosted run 34007258315 在执行项目测试前停于 Hayes 数据包下载，错误为 RemoteCertificateNameMismatch；该红灯不作为代码失败，也不能作为三断点执行通过证据。"
+        "2026-09-06：PR #5 已 squash 合并到 main（8190b7e63d5529de8e11e88a7660b2462eeec4d3）。对应 hosted run 34007258315 在执行项目测试前停于 Hayes 数据包下载，错误为 RemoteCertificateNameMismatch；该红灯不作为代码失败，也不能作为三断点执行通过证据。",
+        "2026-09-06：后续 runs 34008205500、34009410185 与 34010498107 复现同一第三方 TLS 阻断，均未进入项目测试。push/PR 已与该网络下载解耦；下一次 main Full 将首次提供三断点旅程的 hosted 执行结论。"
       ],
       "acceptance": [
         "为数据、分析目录、实证配置、PROCESS/SEM 配置与 Output 历史结果建立可重复种子工作区场景。",
