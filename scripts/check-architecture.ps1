@@ -13,13 +13,17 @@ $manifest = Get-Content -LiteralPath $manifestPath -Encoding UTF8 -Raw | Convert
 $commandPaths = $manifest.commands.PSObject.Properties.Value | ForEach-Object {
     ($_ -split '\s+', 2)[0]
 }
+$governanceMetadataKeys = @('licensingModel')
+$governancePaths = $manifest.governance.PSObject.Properties |
+    Where-Object { $_.Name -notin $governanceMetadataKeys } |
+    ForEach-Object { $_.Value }
 $declaredPaths = @(
     $manifest.entrypoints.path
     $manifest.backendRoutes.path
     $manifest.frontendModules.api
     $manifest.frontendModules.types
     $manifest.contracts.path
-    $manifest.governance.PSObject.Properties.Value
+    $governancePaths
     $manifest.assetPacks.path
     $manifest.assetPacks.restoreGuide
     $manifest.restoredAssetSlices.activePaths

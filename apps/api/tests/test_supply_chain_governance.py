@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -28,6 +29,15 @@ def test_pages_workflow_actions_are_sha_pinned_and_scoped() -> None:
     assert "pages: write" not in build_job
     deploy_job = pages.split("deploy:", 1)[1]
     assert "pages: write" in deploy_job
+
+
+def test_architecture_gate_does_not_treat_license_policy_as_a_path() -> None:
+    manifest = json.loads((ROOT / "project.manifest.json").read_text(encoding="utf-8"))
+    architecture_gate = (ROOT / "scripts" / "check-architecture.ps1").read_text(encoding="utf-8")
+
+    assert manifest["governance"]["licensingModel"] == "proprietary-all-rights-reserved"
+    assert "$governanceMetadataKeys = @('licensingModel')" in architecture_gate
+    assert "Where-Object { $_.Name -notin $governanceMetadataKeys }" in architecture_gate
 
 
 def test_process_macro_is_external_and_excluded_from_distribution() -> None:
